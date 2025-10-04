@@ -50,8 +50,8 @@ body {
 .lr-text { position: absolute; right: 14px; bottom: 14px; font-weight: bold; }
 
 /* Colors exact spec */
-.c1 { color: yellow; background: black; padding: 8px 10px; display: inline-block; }
-.c2 { color: purple; background: yellow; padding: 8px 10px; display: inline-block; margin-top: 10px; }
+.color_yel { color: yellow; background: black; padding: 8px 10px; display: block; text-align: center; }
+.color_pur { color: purple; background: yellow; padding: 8px 10px; display: block; text-align: center; }
 
 /* Profile */
 .center { display: grid; place-items: center; gap: 10px; }
