@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Phase 1.2 Prototype (Simple)</title>
+  <link rel="stylesheet" href="./styles/main.css" />
+</head>
+<body>
+  <main class="phone">
+    <div id="panels" class="panels">
+
+      <!-- Tab 1: Text -->
+      <section id="panel-text" class="panel show">
+        <header class="header"><h1>Text</h1></header>
+        <div class="content scroll">
+          <p>Paste a long block of text here so this area scrolls. The bottom tabs should not move.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque habitant morbi tristique senectus et netus...</p>
+          <p>(Add many paragraphs so this needs a scrollbar.)</p>
+        </div>
+      </section>
+
+      <!-- Tab 2: LR -->
+      <section id="panel-lr" class="panel">
+        <header class="header"><h1>LR</h1></header>
+        <div class="content lr-box">
+          <div class="lr-text">Down Here</div>
+        </div>
+      </section>
+
+      <!-- Tab 3: Colors -->
+      <section id="panel-colors" class="panel">
+        <header class="header"><h1>Colors</h1></header>
+        <div class="content">
+          <p class="c1">Yellow on black</p>
+          <p class="c2">Purple on yellow</p>
+        </div>
+      </section>
+
+      <!-- Tab 4: Profile -->
+      <section id="panel-profile" class="panel">
+        <header class="header"><h1>Profile</h1></header>
+        <div class="content center">
+          <!-- Replace the gray box with your own image file if you want -->
+          <button id="profile-btn" class="avatar" title="Tap image"></button>
+          <strong class="name">Your Name</strong>
+        </div>
+      </section>
+
+      <!-- Tab 5: Choices -->
+      <section id="panel-choices" class="panel">
+        <header class="header"><h1>Choices</h1></header>
+        <div class="content">
+          <form id="choices-form" onsubmit="return false;" class="stack">
+            <fieldset class="stack">
+              <legend>Payment cycle</legend>
+              <label><input type="radio" name="cycle" value="Weekly" checked /> Weekly</label>
+              <label><input type="radio" name="cycle" value="Biweekly" /> Biweekly</label>
+              <label><input type="radio" name="cycle" value="Monthly" /> Monthly</label>
+            </fieldset>
+
+            <label>Budget category
+              <select id="category">
+                <option>Groceries</option>
+                <option>Rent</option>
+                <option>Transportation</option>
+                <option>Entertainment</option>
+              </select>
+            </label>
+
+            <button id="choices-btn" class="btn" type="button">Show Summary</button>
+          </form>
+          <p id="choices-out" class="out"></p>
+        </div>
+      </section>
+
+      <!-- Tab 6: ToDo -->
+      <section id="panel-todo" class="panel">
+        <header class="header"><h1>ToDo</h1></header>
+        <div class="content">
+          <form id="todo-form" onsubmit="return false;" class="row">
+            <input id="todo-input" type="text" placeholder="Add a task" />
+            <button id="todo-add" class="btn" type="button">Add</button>
+          </form>
+          <ul id="todo-list" class="list"></ul>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Bottom tabs -->
+    <nav class="tabs">
+      <button data-tab="text" class="tab active">📄<span>Text</span></button>
+      <button data-tab="lr" class="tab">↘️<span>LR</span></button>
+      <button data-tab="colors" class="tab">🎨<span>Colors</span></button>
+      <button data-tab="profile" class="tab">👤<span>Profile</span></button>
+      <button data-tab="choices" class="tab">🧩<span>Choices</span></button>
+      <button data-tab="todo" class="tab">📝<span>ToDo</span></button>
+    </nav>
+  </main>
+
+  <!-- Very small notification for Profile -->
+  <div id="notice" class="notice" hidden>
+    <div class="notice-box">
+      <p>Profile image tapped.</p>
+      <button id="notice-close" class="btn" type="button">Close</button>
+    </div>
+  </div>
+
+  <script src="./scripts/main.js" defer></script>
+</body>
+</html>

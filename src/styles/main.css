@@ -1,0 +1,90 @@
+:root {
+  --w: 390px;    /* fallback phone width for desktop preview */
+  --h: 780px;    /* fallback height */
+  --bg: #ffffff;
+  --ink: #111111;
+  --muted: #666666;
+  --line: #e5e5e5;
+  --tab-bg: #0B2B60;
+  --tab-ink: #ffd94a;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink);
+  background: #111; /* only visible on desktop preview */
+}
+
+/* PHONE APP: mobile-first, fills the viewport on real devices */
+.phone {
+  width: 640px;
+  height: 960px;
+  background: var(--bg);
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 1fr auto; /* content + bottom tabs */
+}
+
+/* When viewed on desktop, center a phone-sized preview */
+@media (min-width: 700px) {
+  body { display: grid; place-items: start center; padding: 16px; }
+  .phone {
+    width: var(--w);
+    height: var(--h);
+    border: 1px solid #ccc;
+    border-radius: 16px;
+  }
+}
+
+.panels { background: #fff; }
+.panel { display: none; height: 100%; }
+.panel.show { display: grid; grid-template-rows: auto 1fr; }
+.header { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.header h1 { margin: 0; font-size: 18px; }
+.content { padding: 14px; }
+.scroll { overflow: auto; -webkit-overflow-scrolling: touch; }
+
+/* LR positioning */
+.lr-box { position: relative; min-height: 100%; }
+.lr-text { position: absolute; right: 14px; bottom: 14px; font-weight: bold; }
+
+/* Colors exact spec */
+.c1 { color: yellow; background: black; padding: 8px 10px; display: inline-block; }
+.c2 { color: purple; background: yellow; padding: 8px 10px; display: inline-block; margin-top: 10px; }
+
+/* Profile */
+.center { display: grid; place-items: center; gap: 10px; }
+.avatar { width: 128px; height: 128px; border-radius: 999px; border: 1px solid var(--line); background: #ddd; }
+.name { font-weight: 700; font-size: 18px; }
+
+/* Choices */
+.stack { display: grid; gap: 10px; }
+.row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+select, input[type="text"] { padding: 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 16px; }
+.btn { padding: 12px 14px; border: 0; border-radius: 10px; background: #ffd94a; color: #111; font-weight: 700; cursor: pointer; font-size: 16px; min-height: 44px; }
+.out { color: var(--muted); }
+
+/* ToDo */
+.list { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.item { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px; border: 1px solid var(--line); border-radius: 10px; }
+.item.done { opacity: 0.6; text-decoration: line-through; }
+
+/* Bottom tab bar (mobile-friendly tap targets) */
+.tabs {
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  background: var(--tab-bg); color: var(--tab-ink);
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+}
+.tab {
+  appearance: none; background: transparent; border: 0; color: var(--tab-ink);
+  display: grid; place-items: center; gap: 2px; padding: 10px 0; font-size: 13px; cursor: pointer; min-height: 48px;
+}
+.tab.active { background: rgba(255,255,255,0.08); font-weight: 700; }
+.tab span { display: block; font-size: 12px; }
+
+/* Simple notice */
+.notice[hidden] { display: none; }
+.notice { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.4); }
+.notice-box { background: white; padding: 14px; border-radius: 10px; border: 1px solid var(--line); max-width: 90vw; }
