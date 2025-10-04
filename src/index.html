@@ -14,9 +14,10 @@
       <section id="panel-text" class="panel show">
         <header class="header"><h1>Text</h1></header>
         <div class="content scroll">
-          <p>Paste a long block of text here so this area scrolls. The bottom tabs should not move.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque habitant morbi tristique senectus et netus...</p>
-          <p>(Add many paragraphs so this needs a scrollbar.)</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque habitant morbi tristique senectus et netus</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium turpis et dui dignissim, et fermentum risus finibus. Fusce lacinia turpis ante, eget porttitor nulla egestas vitae. Mauris blandit nulla sollicitudin tincidunt molestie. Nam id dolor et lacus eleifend lobortis nec nec felis. Nunc felis neque, lobortis nec consequat eu, posuere sed nunc. Aenean suscipit consequat massa, quis dignissim justo fringilla ac. Sed eu ante ut libero ultricies pretium et sit amet nunc. Cras semper nulla sed efficitur dictum. Nunc ac turpis eget eros sollicitudin lobortis id rhoncus ante. Suspendisse a dolor efficitur magna rhoncus vehicula sit amet at velit.</p>
+          <p>Sed a quam enim. Nullam posuere lacus nulla, a ultrices massa porttitor id. Pellentesque suscipit nunc quis nisl semper, quis dignissim odio bibendum. Morbi vulputate vestibulum augue eu ornare. Nam in nunc sit amet leo varius malesuada. Ut aliquam at ipsum eu hendrerit. Mauris gravida ipsum mauris. Mauris venenatis imperdiet risus nec eleifend. Nunc egestas molestie tortor luctus bibendum. Duis et libero et ante sagittis gravida in non augue. Pellentesque orci urna, lobortis vel sollicitudin id, lobortis a ligula. Donec congue suscipit cursus. Donec aliquam leo a nibh convallis blandit.</p>
+          <p>Nulla pulvinar dui eu turpis lobortis luctus. Pellentesque in semper odio. In hac habitasse platea dictumst. Donec quis nisl eu ipsum accumsan ultrices ac ac velit. Donec rhoncus lectus id nisi malesuada laoreet. Duis sit amet pharetra risus. Morbi luctus elit sit amet pellentesque semper. Morbi pulvinar lectus metus, sed porttitor est ultricies ac.</p>
         </div>
       </section>
 
@@ -90,15 +91,34 @@
 
     <!-- Bottom tabs -->
     <nav class="tabs">
-      <button data-tab="text" class="tab active">📄<span>Text</span></button>
-      <button data-tab="lr" class="tab">↘️<span>LR</span></button>
-      <button data-tab="colors" class="tab">🎨<span>Colors</span></button>
-      <button data-tab="profile" class="tab">👤<span>Profile</span></button>
-      <button data-tab="choices" class="tab">🧩<span>Choices</span></button>
-      <button data-tab="todo" class="tab">📝<span>ToDo</span></button>
+        <button data-tab="text" class="tab active" aria-label="Text">
+            <img class="icon" src="./assets/icons/text.png" alt="">
+            <span>Text</span>
+        </button>
+        <button data-tab="lr" class="tab" aria-label="LR">
+            <img class="icon" src="./assets/icons/lr.png" alt="">
+            <span>LR</span>
+        </button>
+        <button data-tab="colors" class="tab" aria-label="Colors">
+            <img class="icon" src="./assets/icons/colors.png" alt="">
+            <span>Colors</span>
+        </button>
+        <button data-tab="profile" class="tab" aria-label="Profile">
+            <img class="icon" src="./assets/icons/profile.png" alt="">
+            <span>Profile</span>
+        </button>
+        <button data-tab="choices" class="tab" aria-label="Choices">
+            <img class="icon" src="./assets/icons/choices.png" alt="">
+            <span>Choices</span>
+        </button>
+        <button data-tab="todo" class="tab" aria-label="ToDo">
+            <img class="icon" src="./assets/icons/todo.png" alt="">
+            <span>ToDo</span>
+        </button>
     </nav>
-  </main>
 
+  </main>
+  
   <!-- Very small notification for Profile -->
   <div id="notice" class="notice" hidden>
     <div class="notice-box">

@@ -38,13 +38,13 @@ body {
   }
 }
 
-.panels { background: #fff; }
-.panel { display: none; height: 100%; }
-.panel.show { display: grid; grid-template-rows: auto 1fr; }
+.panels { background: #fff; min-height: 0; }
+.panel { display: none; height: 100%; min-height: 0; }
+.panel.show { display: grid; grid-template-rows: auto 1fr; min-height: 0; }
 .header { padding: 12px 14px; border-bottom: 1px solid var(--line); }
 .header h1 { margin: 0; font-size: 18px; }
-.content { padding: 14px; }
-.scroll { overflow: auto; -webkit-overflow-scrolling: touch; }
+.content { padding: 14px; min-height: 0; }
+.scroll { overflow: auto; -webkit-overflow-scrolling: touch; scrollbar-gutter: stable; }
 
 /* LR positioning */
 .lr-box { position: relative; min-height: 100%; }
@@ -80,6 +80,12 @@ select, input[type="text"] { padding: 12px; border: 1px solid var(--line); borde
 .tab {
   appearance: none; background: transparent; border: 0; color: var(--tab-ink);
   display: grid; place-items: center; gap: 2px; padding: 10px 0; font-size: 13px; cursor: pointer; min-height: 48px;
+}
+.tab .icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
 }
 .tab.active { background: rgba(255,255,255,0.08); font-weight: 700; }
 .tab span { display: block; font-size: 12px; }
