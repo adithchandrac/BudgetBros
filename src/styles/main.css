@@ -54,7 +54,7 @@ body {
 .color_pur { color: purple; background: yellow; padding: 8px 10px; display: block; text-align: center; }
 
 /* Profile */
-.center { display: grid; place-items: center; gap: 10px; }
+.center { display: flex; flex-direction: column; align-items: center; gap: 10px; height: 100%; }
 .avatar { width: 128px; height: 128px; border-radius: 999px; border: 1px solid var(--line); background: #ddd; }
 .name { font-weight: 700; font-size: 18px; }
 
