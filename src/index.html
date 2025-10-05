@@ -1,134 +1,150 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Phase 1.2 Prototype (Simple)</title>
-  <link rel="stylesheet" href="./styles/main.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Phase 1.2 Prototype (Simple)</title>
+    <link rel="stylesheet" href="./styles/main.css" />
 </head>
+
 <body>
-  <main class="phone">
-    <div id="panels" class="panels">
+    <main class="phone">
+        <div id="panels" class="panels">
 
-      <!-- Tab 1: Text -->
-      <section id="panel-text" class="panel show">
-        <header class="header"><h1>Text</h1></header>
-        <div class="content scroll">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque habitant morbi tristique senectus et netus</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium turpis et dui dignissim, et fermentum risus finibus. Fusce lacinia turpis ante, eget porttitor nulla egestas vitae. Mauris blandit nulla sollicitudin tincidunt molestie. Nam id dolor et lacus eleifend lobortis nec nec felis. Nunc felis neque, lobortis nec consequat eu, posuere sed nunc. Aenean suscipit consequat massa, quis dignissim justo fringilla ac. Sed eu ante ut libero ultricies pretium et sit amet nunc. Cras semper nulla sed efficitur dictum. Nunc ac turpis eget eros sollicitudin lobortis id rhoncus ante. Suspendisse a dolor efficitur magna rhoncus vehicula sit amet at velit.</p>
-          <p>Sed a quam enim. Nullam posuere lacus nulla, a ultrices massa porttitor id. Pellentesque suscipit nunc quis nisl semper, quis dignissim odio bibendum. Morbi vulputate vestibulum augue eu ornare. Nam in nunc sit amet leo varius malesuada. Ut aliquam at ipsum eu hendrerit. Mauris gravida ipsum mauris. Mauris venenatis imperdiet risus nec eleifend. Nunc egestas molestie tortor luctus bibendum. Duis et libero et ante sagittis gravida in non augue. Pellentesque orci urna, lobortis vel sollicitudin id, lobortis a ligula. Donec congue suscipit cursus. Donec aliquam leo a nibh convallis blandit.</p>
-          <p>Nulla pulvinar dui eu turpis lobortis luctus. Pellentesque in semper odio. In hac habitasse platea dictumst. Donec quis nisl eu ipsum accumsan ultrices ac ac velit. Donec rhoncus lectus id nisi malesuada laoreet. Duis sit amet pharetra risus. Morbi luctus elit sit amet pellentesque semper. Morbi pulvinar lectus metus, sed porttitor est ultricies ac.</p>
+            <!-- Tab 1: Text -->
+            <section id="panel-text" class="panel show">
+                <header class="header">
+                    <h1>Text</h1></header>
+                <div class="content scroll">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque habitant morbi tristique senectus et netus</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium turpis et dui dignissim, et fermentum risus finibus. Fusce lacinia turpis ante, eget porttitor nulla egestas vitae. Mauris blandit nulla sollicitudin tincidunt
+                        molestie. Nam id dolor et lacus eleifend lobortis nec nec felis. Nunc felis neque, lobortis nec consequat eu, posuere sed nunc. Aenean suscipit consequat massa, quis dignissim justo fringilla ac. Sed eu ante ut libero ultricies
+                        pretium et sit amet nunc. Cras semper nulla sed efficitur dictum. Nunc ac turpis eget eros sollicitudin lobortis id rhoncus ante. Suspendisse a dolor efficitur magna rhoncus vehicula sit amet at velit.</p>
+                    <p>Sed a quam enim. Nullam posuere lacus nulla, a ultrices massa porttitor id. Pellentesque suscipit nunc quis nisl semper, quis dignissim odio bibendum. Morbi vulputate vestibulum augue eu ornare. Nam in nunc sit amet leo varius malesuada.
+                        Ut aliquam at ipsum eu hendrerit. Mauris gravida ipsum mauris. Mauris venenatis imperdiet risus nec eleifend. Nunc egestas molestie tortor luctus bibendum. Duis et libero et ante sagittis gravida in non augue. Pellentesque orci
+                        urna, lobortis vel sollicitudin id, lobortis a ligula. Donec congue suscipit cursus. Donec aliquam leo a nibh convallis blandit.</p>
+                    <p>Nulla pulvinar dui eu turpis lobortis luctus. Pellentesque in semper odio. In hac habitasse platea dictumst. Donec quis nisl eu ipsum accumsan ultrices ac ac velit. Donec rhoncus lectus id nisi malesuada laoreet. Duis sit amet pharetra
+                        risus. Morbi luctus elit sit amet pellentesque semper. Morbi pulvinar lectus metus, sed porttitor est ultricies ac.</p>
+                </div>
+            </section>
+
+            <!-- Tab 2: LR -->
+            <section id="panel-lr" class="panel">
+                <header class="header">
+                    <h1>LR</h1></header>
+                <div class="content lr-box">
+                    <div class="lr-text">Down Here</div>
+                </div>
+            </section>
+
+            <!-- Tab 3: Colors -->
+            <section id="panel-colors" class="panel">
+                <header class="header">
+                    <h1>Colors</h1></header>
+                <div class="content">
+                    <p class="color_yel">Hello World I am Yellow</p>
+                    <p class="color_pur">Hello Yellow I am Purple</p>
+                </div>
+            </section>
+
+            <!-- Tab 4: Profile -->
+            <section id="panel-profile" class="panel">
+                <header class="header">
+                    <h1>Profile</h1></header>
+                <div class="content center">
+                    <button id="profile-btn" class="avatar" title="Tap image">
+                        <img src="./assets/icons/wink.png" alt="" height="128px">
+                    </button>
+                    <strong class="name">Darren Watkins</strong>
+                </div>
+            </section>
+
+            <!-- Tab 5: Choices -->
+            <section id="panel-choices" class="panel">
+                <header class="header">
+                    <h1>Choices</h1></header>
+                <div class="content">
+                    <form id="choices-form" class="stack">
+                        <fieldset class="stack">
+                            <legend>Payment cycle</legend>
+                            <label>
+                                <input type="radio" name="cycle" value="Weekly" checked /> Weekly</label>
+                            <label>
+                                <input type="radio" name="cycle" value="Biweekly" /> Biweekly</label>
+                            <label>
+                                <input type="radio" name="cycle" value="Monthly" /> Monthly</label>
+                        </fieldset>
+
+                        <label>Budget category
+                            <select id="category">
+                                <option>Groceries</option>
+                                <option>Rent</option>
+                                <option>Transportation</option>
+                                <option>Entertainment</option>
+                            </select>
+                        </label>
+
+                        <button id="choices-btn" class="btn" type="button">Show Summary</button>
+                    </form>
+                    <p id="choices-out" class="out"></p>
+                </div>
+            </section>
+
+            <!-- Tab 6: ToDo -->
+            <section id="panel-todo" class="panel">
+                <header class="header">
+                    <h1>ToDo</h1></header>
+                <div class="content">
+                    <h2 class="todo-title">My ToDo List</h2>
+                    <form id="todo-form" onsubmit="return false;" class="row">
+                        <input id="todo-input" type="text" placeholder="Add a task" />
+                        <button id="todo-add" class="btn" type="button">Add</button>
+                    </form>
+                    <ul id="todo-list" class="list"></ul>
+                </div>
+            </section>
+
         </div>
-      </section>
 
-      <!-- Tab 2: LR -->
-      <section id="panel-lr" class="panel">
-        <header class="header"><h1>LR</h1></header>
-        <div class="content lr-box">
-          <div class="lr-text">Down Here</div>
+        <!-- Bottom tabs -->
+        <nav class="tabs">
+            <button data-tab="text" class="tab active" aria-label="Text">
+                <img class="icon" src="./assets/icons/text.png" alt="">
+                <span>Text</span>
+            </button>
+            <button data-tab="lr" class="tab" aria-label="LR">
+                <img class="icon" src="./assets/icons/lr.png" alt="">
+                <span>LR</span>
+            </button>
+            <button data-tab="colors" class="tab" aria-label="Colors">
+                <img class="icon" src="./assets/icons/colors.png" alt="">
+                <span>Colors</span>
+            </button>
+            <button data-tab="profile" class="tab" aria-label="Profile">
+                <img class="icon" src="./assets/icons/profile.png" alt="">
+                <span>Profile</span>
+            </button>
+            <button data-tab="choices" class="tab" aria-label="Choices">
+                <img class="icon" src="./assets/icons/choices.png" alt="">
+                <span>Choices</span>
+            </button>
+            <button data-tab="todo" class="tab" aria-label="ToDo">
+                <img class="icon" src="./assets/icons/todo.png" alt="">
+                <span>ToDo</span>
+            </button>
+        </nav>
+
+    </main>
+
+    <div id="notice" class="notice" hidden>
+        <div class="notice-box">
+            <p>Warning! Do not click on the profile image.</p>
+            <button id="notice-close" class="btn" type="button">Close</button>
         </div>
-      </section>
-
-      <!-- Tab 3: Colors -->
-      <section id="panel-colors" class="panel">
-        <header class="header"><h1>Colors</h1></header>
-        <div class="content">
-          <p class="color_yel">Hello World I am Yellow</p>
-          <p class="color_pur">Hello Yellow I am Purple</p>
-        </div>
-      </section>
-
-      <!-- Tab 4: Profile -->
-      <section id="panel-profile" class="panel">
-        <header class="header"><h1>Profile</h1></header>
-        <div class="content center">
-          <button id="profile-btn" class="avatar" title="Tap image">
-            <img src="./assets/icons/wink.png" alt="" height="128px">
-          </button>
-          <strong class="name">Darren Watkins</strong>
-        </div>
-      </section>
-
-      <!-- Tab 5: Choices -->
-      <section id="panel-choices" class="panel">
-        <header class="header"><h1>Choices</h1></header>
-        <div class="content">
-          <form id="choices-form" class="stack">
-            <fieldset class="stack">
-              <legend>Payment cycle</legend>
-              <label><input type="radio" name="cycle" value="Weekly" checked /> Weekly</label>
-              <label><input type="radio" name="cycle" value="Biweekly" /> Biweekly</label>
-              <label><input type="radio" name="cycle" value="Monthly" /> Monthly</label>
-            </fieldset>
-
-            <label>Budget category
-              <select id="category">
-                <option>Groceries</option>
-                <option>Rent</option>
-                <option>Transportation</option>
-                <option>Entertainment</option>
-              </select>
-            </label>
-
-            <button id="choices-btn" class="btn" type="button">Show Summary</button>
-          </form>
-          <p id="choices-out" class="out"></p>
-        </div>
-      </section>
-
-      <!-- Tab 6: ToDo -->
-      <section id="panel-todo" class="panel">
-        <header class="header"><h1>ToDo</h1></header>
-        <div class="content">
-          <h2 class="todo-title">My ToDo List</h2>
-          <form id="todo-form" onsubmit="return false;" class="row">
-            <input id="todo-input" type="text" placeholder="Add a task" />
-            <button id="todo-add" class="btn" type="button">Add</button>
-          </form>
-          <ul id="todo-list" class="list"></ul>
-        </div>
-      </section>
-
     </div>
 
-    <!-- Bottom tabs -->
-    <nav class="tabs">
-        <button data-tab="text" class="tab active" aria-label="Text">
-            <img class="icon" src="./assets/icons/text.png" alt="">
-            <span>Text</span>
-        </button>
-        <button data-tab="lr" class="tab" aria-label="LR">
-            <img class="icon" src="./assets/icons/lr.png" alt="">
-            <span>LR</span>
-        </button>
-        <button data-tab="colors" class="tab" aria-label="Colors">
-            <img class="icon" src="./assets/icons/colors.png" alt="">
-            <span>Colors</span>
-        </button>
-        <button data-tab="profile" class="tab" aria-label="Profile">
-            <img class="icon" src="./assets/icons/profile.png" alt="">
-            <span>Profile</span>
-        </button>
-        <button data-tab="choices" class="tab" aria-label="Choices">
-            <img class="icon" src="./assets/icons/choices.png" alt="">
-            <span>Choices</span>
-        </button>
-        <button data-tab="todo" class="tab" aria-label="ToDo">
-            <img class="icon" src="./assets/icons/todo.png" alt="">
-            <span>ToDo</span>
-        </button>
-    </nav>
-
-  </main>
-  
-  <!-- Small notification for Profile -->
-  <div id="notice" class="notice" hidden>
-    <div class="notice-box">
-      <p>Warning! Do not click on the profile image.</p>
-      <button id="notice-close" class="btn" type="button">Close</button>
-    </div>
-  </div>
-
-  <script src="./scripts/main.js" defer></script>
+    <script src="./scripts/main.js" defer></script>
 </body>
+
 </html>
