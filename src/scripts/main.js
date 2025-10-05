@@ -53,7 +53,6 @@
     const li = document.createElement('li');
     li.className = 'item';
     li.innerHTML = `
-      <input type="checkbox" />
       <span class="t"></span>
       <button class="btn del" type="button">×</button>
     `;
@@ -65,7 +64,9 @@
   if (todoList) todoList.addEventListener('click', (e)=>{
     const li = e.target.closest('.item');
     if(!li) return;
-    if(e.target.matches('input[type="checkbox"]')) li.classList.toggle('done', e.target.checked);
+    if(!e.target.matches('.del')) {
+      li.classList.toggle('done');
+    }
     if(e.target.matches('.del')) li.remove();
   });
 })();
