@@ -59,10 +59,30 @@ body {
 .name { font-weight: 700; font-size: 18px; }
 
 /* Choices */
-.stack { display: grid; gap: 10px; }
-.row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
-select, input[type="text"] { padding: 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 16px; }
-.btn { padding: 12px 14px; border: 0; border-radius: 10px; background: #ffd94a; color: #111; font-weight: 700; cursor: pointer; font-size: 16px; min-height: 44px; }
+.stack { 
+  display: flexbox; 
+  gap: 
+  10px;
+}
+.row { display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+select, input[type="text"] {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 16px;
+}
+.btn { padding: 12px 14px; 
+  border: 0; 
+  border-radius: 10px; 
+  background: #ffd94a; 
+  color: #111;
+  font-weight: 700; 
+  font-size: 16px;
+  min-height: 44px;
+}
 .out { color: var(--muted); }
 
 /* ToDo */

@@ -36,15 +36,13 @@
   if (closeNotice) closeNotice.addEventListener('click', ()=> notice.hidden = true);
 
   // Choices summary
-  const choicesBtn = $('#choices-btn');
-  const out = $('#choices-out');
-  if (choicesBtn) {
+  const choicesBtn = document.getElementById('choices-btn');
+  const out = document.getElementById('choices-out');
     choicesBtn.addEventListener('click', ()=>{
-      const cycle = (document.querySelector('input[name="cycle"]:checked')||{}).value || '—';
-      const cat = $('#category')?.value || '—';
-      out.textContent = `Selected: ${cycle} • ${cat}`;
+      const cycle = (document.querySelector('input[name="cycle"]:checked')||{}).value;
+      const cat = document.getElementById('category').value;
+      out.innerHTML = `<p>Selected: ${cat}, ${cycle} <p>`;
     });
-  }
 
   // ToDo basics
   const todoInput = $('#todo-input');
