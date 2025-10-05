@@ -29,9 +29,9 @@
   show('text');
 
   // Profile notice
-  const profileBtn = $('#profile-btn');
-  const notice = $('#notice');
-  const closeNotice = $('#notice-close');
+  const profileBtn = document.getElementById('profile-btn');
+  const notice = document.getElementById('notice');
+  const closeNotice = document.getElementById('notice-close');
   if (profileBtn) profileBtn.addEventListener('click', ()=> notice.hidden = false);
   if (closeNotice) closeNotice.addEventListener('click', ()=> notice.hidden = true);
 
