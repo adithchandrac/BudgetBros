@@ -61,12 +61,16 @@
             todoInput.value = '';
         }
     });
-    if (todoList) todoList.addEventListener('click', (e) => {
-        const li = e.target.closest('.item');
-        if (!li) return;
-        if (!e.target.matches('.del')) {
-            li.classList.toggle('done');
-        }
-        if (e.target.matches('.del')) li.remove();
-    });
+    if (todoList) {
+        todoList.addEventListener('click', (e) => {
+            const item = e.target.closest('.item');
+            if (!item) return;
+            
+            if (e.target.closest('.del')) {
+            item.classList.toggle('done');
+            return;
+            }
+            item.classList.toggle('done');
+        });
+    }
 })();

@@ -204,23 +204,9 @@ input[type="text"] {
 	color: #fff;
 }
 
-.item.done .text {
+.item.done .t {
 	text-decoration: line-through;
 }
-
-.item.done::before {
-	content: '';
-	position: absolute;
-	border-color: #07ff07;
-	border-style: solid;
-	border-width: 0 2px 2px 0;
-	left: 16px;
-	top: 50%;
-	transform: translateY(-50%) rotate(45deg);
-	height: 15px;
-	width: 7px;
-}
-
 .todo-title {
 	margin: 0 0 12px 0;
 	font-size: 14px;
