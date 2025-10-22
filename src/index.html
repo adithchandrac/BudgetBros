@@ -1,150 +1,129 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Phase 1.2 Prototype (Simple)</title>
-    <link rel="stylesheet" href="./styles/main.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Budget App Prototype</title>
+  <link rel="stylesheet" href="./styles/main.css" />
 </head>
-
 <body>
-    <main class="phone">
-        <div id="panels" class="panels">
+  <main class="phone">
+    <div id="panels" class="panels">
 
-            <!-- Tab 1: Text -->
-            <section id="panel-text" class="panel show">
-                <header class="header">
-                    <h1>Text</h1></header>
-                <div class="content scroll">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque habitant morbi tristique senectus et netus</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium turpis et dui dignissim, et fermentum risus finibus. Fusce lacinia turpis ante, eget porttitor nulla egestas vitae. Mauris blandit nulla sollicitudin tincidunt
-                        molestie. Nam id dolor et lacus eleifend lobortis nec nec felis. Nunc felis neque, lobortis nec consequat eu, posuere sed nunc. Aenean suscipit consequat massa, quis dignissim justo fringilla ac. Sed eu ante ut libero ultricies
-                        pretium et sit amet nunc. Cras semper nulla sed efficitur dictum. Nunc ac turpis eget eros sollicitudin lobortis id rhoncus ante. Suspendisse a dolor efficitur magna rhoncus vehicula sit amet at velit.</p>
-                    <p>Sed a quam enim. Nullam posuere lacus nulla, a ultrices massa porttitor id. Pellentesque suscipit nunc quis nisl semper, quis dignissim odio bibendum. Morbi vulputate vestibulum augue eu ornare. Nam in nunc sit amet leo varius malesuada.
-                        Ut aliquam at ipsum eu hendrerit. Mauris gravida ipsum mauris. Mauris venenatis imperdiet risus nec eleifend. Nunc egestas molestie tortor luctus bibendum. Duis et libero et ante sagittis gravida in non augue. Pellentesque orci
-                        urna, lobortis vel sollicitudin id, lobortis a ligula. Donec congue suscipit cursus. Donec aliquam leo a nibh convallis blandit.</p>
-                    <p>Nulla pulvinar dui eu turpis lobortis luctus. Pellentesque in semper odio. In hac habitasse platea dictumst. Donec quis nisl eu ipsum accumsan ultrices ac ac velit. Donec rhoncus lectus id nisi malesuada laoreet. Duis sit amet pharetra
-                        risus. Morbi luctus elit sit amet pellentesque semper. Morbi pulvinar lectus metus, sed porttitor est ultricies ac.</p>
-                </div>
-            </section>
+      <!-- HOME (from Figma mock) -->
+      <section id="panel-home" class="panel show">
+        <header class="header">
+          <h1 class="home-hello">Hello User</h1>
+        </header>
 
-            <!-- Tab 2: LR -->
-            <section id="panel-lr" class="panel">
-                <header class="header">
-                    <h1>LR</h1></header>
-                <div class="content lr-box">
-                    <div class="lr-text">Down Here</div>
-                </div>
-            </section>
+    <div class="content scroll home-grid">
+          <div class="home-meta">
+            <div>Your Budget</div>
+            <div class="home-range">
+              <span>Today</span>
+              <span class="is-active">Week</span>
+              <span>Month</span>
+              <span>Year</span>
+            </div>
+          </div>
 
-            <!-- Tab 3: Colors -->
-            <section id="panel-colors" class="panel">
-                <header class="header">
-                    <h1>Colors</h1></header>
-                <div class="content">
-                    <p class="color_yel">Hello World I am Yellow</p>
-                    <p class="color_pur">Hello Yellow I am Purple</p>
-                </div>
-            </section>
+          <div class="home-budget-title">Daily Budget: $100</div>
+          <div class="donut-wrap">
+            <svg width="180" height="180" viewBox="0 0 180 180" role="img" aria-label="70 percent">
+              <circle cx="90" cy="90" r="64" fill="#0B2B60"></circle>
+              <circle cx="90" cy="90" r="70" fill="none" stroke="#dfe7f6" stroke-width="20"></circle>
+              <circle cx="90" cy="90" r="70" fill="none" stroke="#8f4fd8" stroke-width="20"
+                      stroke-dasharray="307 440" stroke-linecap="round"
+                      transform="rotate(-90 90 90)"></circle>
+              <text x="90" y="98" text-anchor="middle" font-size="36" font-weight="800" fill="#ffffff">70%</text>
+            </svg>
+          </div>
 
-            <!-- Tab 4: Profile -->
-            <section id="panel-profile" class="panel">
-                <header class="header">
-                    <h1>Profile</h1></header>
-                <div class="content center">
-                    <button id="profile-btn" class="avatar" title="Tap image">
-                        <img src="./assets/icons/wink.png" alt="" height="128px">
-                    </button>
-                    <strong class="name">Darren Watkins</strong>
-                </div>
-            </section>
+          <p class="home-status">
+            You are under your daily budget of $100 at 70%.<br/>
+            Great job being fiscally responsible!
+          </p>
 
-            <!-- Tab 5: Choices -->
-            <section id="panel-choices" class="panel">
-                <header class="header">
-                    <h1>Choices</h1></header>
-                <div class="content">
-                    <form id="choices-form" class="stack">
-                        <fieldset class="stack">
-                            <legend>Payment cycle</legend>
-                            <label>
-                                <input type="radio" name="cycle" value="Weekly" checked /> Weekly</label>
-                            <label>
-                                <input type="radio" name="cycle" value="Biweekly" /> Biweekly</label>
-                            <label>
-                                <input type="radio" name="cycle" value="Monthly" /> Monthly</label>
-                        </fieldset>
-
-                        <label>Budget category
-                            <select id="category">
-                                <option>Groceries</option>
-                                <option>Rent</option>
-                                <option>Transportation</option>
-                                <option>Entertainment</option>
-                            </select>
-                        </label>
-
-                        <button id="choices-btn" class="btn" type="button">Show Summary</button>
-                    </form>
-                    <p id="choices-out" class="out"></p>
-                </div>
-            </section>
-
-            <!-- Tab 6: ToDo -->
-            <section id="panel-todo" class="panel">
-                <header class="header">
-                    <h1>ToDo</h1></header>
-                <div class="content">
-                    <h2 class="todo-title">My ToDo List</h2>
-                    <form id="todo-form" onsubmit="return false;" class="row">
-                        <input id="todo-input" type="text" placeholder="Add a task" />
-                        <button id="todo-add" class="btn" type="button">Add</button>
-                    </form>
-                    <ul id="todo-list" class="list"></ul>
-                </div>
-            </section>
-
+          <div class="home-insights-label">Insights:</div>
+          <div class="home-insight-lines">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+          </div>
         </div>
+      </section>
 
-        <!-- Bottom tabs -->
-        <nav class="tabs">
-            <button data-tab="text" class="tab active" aria-label="Text">
-                <img class="icon" src="./assets/icons/text.png" alt="">
-                <span>Text</span>
-            </button>
-            <button data-tab="lr" class="tab" aria-label="LR">
-                <img class="icon" src="./assets/icons/lr.png" alt="">
-                <span>LR</span>
-            </button>
-            <button data-tab="colors" class="tab" aria-label="Colors">
-                <img class="icon" src="./assets/icons/colors.png" alt="">
-                <span>Colors</span>
-            </button>
-            <button data-tab="profile" class="tab" aria-label="Profile">
-                <img class="icon" src="./assets/icons/profile.png" alt="">
-                <span>Profile</span>
-            </button>
-            <button data-tab="choices" class="tab" aria-label="Choices">
-                <img class="icon" src="./assets/icons/choices.png" alt="">
-                <span>Choices</span>
-            </button>
-            <button data-tab="todo" class="tab" aria-label="ToDo">
-                <img class="icon" src="./assets/icons/todo.png" alt="">
-                <span>ToDo</span>
-            </button>
-        </nav>
-
-    </main>
-
-    <div id="notice" class="notice" hidden>
-        <div class="notice-box">
-            <p>Warning! Do not click on the profile image.</p>
-            <button id="notice-close" class="btn" type="button">Close</button>
+      <!-- BUDGET tab (placeholder content; keep your existing controls here) -->
+      <section id="panel-budget" class="panel">
+        <header class="header"><h1>Budget</h1></header>
+        <div class="content scroll">
+          <p class="out">Set monthly limits by category and create savings goals.</p>
+          <!-- your budget forms/components go here -->
         </div>
+      </section>
+
+      <!-- OVERVIEW tab (graphs/insights view) -->
+      <section id="panel-spending" class="panel">
+        <header class="header"><h1>Spending</h1></header>
+        <div class="content scroll">
+          <p class="out">Spending trends and category breakdowns over time.</p>
+          <!-- charts / filters will go here -->
+        </div>
+      </section>
+
+      <!-- STORE MODE tab -->
+      <section id="panel-store" class="panel">
+        <header class="header"><h1>Store mode</h1></header>
+        <div class="content scroll">
+          <p class="out">Quick-entry view while shopping (low-friction logging).</p>
+          <!-- store-mode quick log UI -->
+        </div>
+      </section>
+
+      <!-- PROFILE tab (kept simple) -->
+      <section id="panel-profile" class="panel">
+        <header class="header"><h1>Profile</h1></header>
+        <div class="content scroll">
+          <button id="profile-btn" class="btn" type="button">Show notice</button>
+          <p class="out">Account and preferences (coming soon).</p>
+        </div>
+      </section>
+
     </div>
 
-    <script src="./scripts/main.js" defer></script>
-</body>
+    <!-- bottom nav — tabs match the mock -->
+    <nav class="tabs">
+      <button data-tab="home" class="tab active" aria-label="Home">
+        <img class="icon" src="./assets/icons/home.png" alt="">
+        <span>Home</span>
+      </button>
+      <button data-tab="budget" class="tab" aria-label="Budget">
+        <img class="icon" src="./assets/icons/money-bag.png" alt="">
+        <span>Budget</span>
+      </button>
+      <button data-tab="spending" class="tab" aria-label="Spending">
+        <img class="icon" src="./assets/icons/earnings.png" alt="">
+        <span>Overview</span>
+      </button>
+      <button data-tab="store" class="tab" aria-label="Store mode">
+        <img class="icon" src="./assets/icons/store.png" alt="">
+        <span>Store mode</span>
+      </button>
+      <button data-tab="profile" class="tab" aria-label="Profile">
+        <img class="icon" src="./assets/icons/user-list-icon.png" alt="">
+        <span>Profile</span>
+      </button>
+    </nav>
+  </main>
 
+  <!-- small demo notice -->
+  <div id="notice" class="notice" hidden>
+    <div class="notice-box">
+      <p>Heads up — this is a prototype notice.</p>
+      <button id="notice-close" class="btn" type="button">Close</button>
+    </div>
+  </div>
+
+  <script src="./scripts/main.js" defer></script>
+</body>
 </html>
