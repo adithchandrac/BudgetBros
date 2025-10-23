@@ -206,3 +206,90 @@ select,input[type="text"]{
   transition: all 0.2s ease-in-out;
 }
 
+/* helper */
+.visually-hidden{
+  position:absolute !important; height:1px; width:1px; overflow:hidden;
+  clip:rect(1px,1px,1px,1px); white-space:nowrap;
+}
+
+.btn-ghost{
+  background:transparent;color:var(--ink);
+  border:1px solid var(--line)
+}
+
+/* ==== Add Transaction form / disclosure ==== */
+.txn-form{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.txn-form .row select,
+.txn-form .row input{width:100%}
+.txn-form .row{grid-template-columns:1fr 1fr}
+.txn-form .row:last-child{grid-template-columns:1fr auto}
+.txn-disclosure{margin-top:12px}
+.txn-disclosure > summary{width:max-content}
+
+/* ===== Spending (graph placeholder + toolbar + list) ===== */
+.graph-placeholder{margin:12px 0 6px}
+.graph-box{
+  height:160px;
+  border:1px dashed var(--line);
+  border-radius:12px;
+  background:rgba(255,255,255,.04);
+  display:grid;place-items:center;
+  color:var(--muted);font-size:14px;
+}
+
+.txn-toolbar{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:12px;
+  margin:14px 0 10px;
+}
+.txn-title{margin:0;font-size:16px;font-weight:700}
+
+.seg{
+  display:inline-grid;
+  grid-auto-flow:column;
+  gap:8px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:6px;
+  margin:0; /* toolbar manages spacing */
+}
+.seg-btn{
+  appearance:none; border:0;
+  background:transparent; color:#fff;
+  padding:8px 12px; border-radius:8px;
+  font-weight:600; cursor:pointer;
+}
+.seg-btn.is-selected{ background:#1b3f78; }
+
+.txn-list{ display:flex; flex-direction:column; gap:8px; padding-bottom:16px; }
+.txn{
+  display:grid;
+  grid-template-columns: 1fr auto auto; /* make room for delete button */
+  gap:8px;
+  align-items:center;
+  padding:12px 12px;
+  background:rgba(0,0,0,.12);
+  border:1px solid var(--line);
+  border-radius:12px;
+}
+.txn-left{ min-width:0; }
+.txn-cat{ font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.txn-note{ color:var(--muted); font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.txn-right{ text-align:right; }
+.txn-amt{ font-weight:800; }
+.txn-right.expense .txn-amt { color: #f87171; }  /* red */
+.txn-right.income  .txn-amt { color: #4ade80; }  /* green */
+.txn-date{ color:var(--muted); font-size:12px; margin-top:2px; }
+
+.txn-empty{ color:var(--muted); margin:8px 0; }
+
+/* delete button */
+.txn-del{
+  appearance:none;border:0;background:transparent;color:#fff;opacity:.75;
+  font-weight:900;font-size:18px;cursor:pointer;padding:4px 6px;align-self:start;
+}
+.txn-del:hover{opacity:1}

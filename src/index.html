@@ -62,14 +62,72 @@
         </div>
       </section>
 
-      <!-- OVERVIEW tab (graphs/insights view) -->
-      <section id="panel-spending" class="panel">
-        <header class="header"><h1>Spending</h1></header>
-        <div class="content scroll">
-          <p class="out">Spending trends and category breakdowns over time.</p>
-          <!-- charts / filters will go here -->
+    <!-- SPENDING tab: graph placeholder + transactions + filter + add/remove -->
+    <section id="panel-spending" class="panel">
+    <header class="header"><h1>Spending</h1></header>
+
+    <div class="content scroll">
+        <!-- Graph placeholder (leave space, not implemented) -->
+        <div class="graph-placeholder" aria-label="Spending graph area">
+        <div class="graph-box"><span>Graph placeholder</span></div>
         </div>
-      </section>
+
+        <!-- Transactions toolbar -->
+        <div class="txn-toolbar">
+        <h2 class="txn-title">Transactions</h2>
+        <div class="seg">
+            <button class="seg-btn is-selected" data-filter="all" aria-pressed="true">All</button>
+            <button class="seg-btn" data-filter="expense" aria-pressed="false">Expenses</button>
+            <button class="seg-btn" data-filter="income" aria-pressed="false">Income</button>
+        </div>
+        </div>
+
+        <!-- Recent transactions list -->
+        <div id="txn-list" class="txn-list" role="list" aria-label="Recent transactions"></div>
+
+        <!-- Log additional (collapsible add form) -->
+        <details class="txn-disclosure">
+        <summary class="btn btn-ghost">Log additional</summary>
+        <form id="txn-form" class="txn-form" autocomplete="off">
+            <div class="row">
+            <label class="visually-hidden" for="txn-type">Type</label>
+            <select id="txn-type" required>
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+            </select>
+
+            <label class="visually-hidden" for="txn-amount">Amount</label>
+            <input id="txn-amount" type="number" step="0.01" min="0.01" placeholder="Amount" required />
+            </div>
+
+            <div class="row">
+            <label class="visually-hidden" for="txn-category">Category</label>
+            <input id="txn-category" list="category-suggestions" placeholder="Category (e.g., Groceries)" required />
+            <datalist id="category-suggestions">
+                <option value="Groceries"></option>
+                <option value="Transportation"></option>
+                <option value="Dining"></option>
+                <option value="Books"></option>
+                <option value="Health"></option>
+                <option value="Coffee"></option>
+                <option value="Paycheck"></option>
+                <option value="Scholarship"></option>
+            </datalist>
+
+            <label class="visually-hidden" for="txn-date">Date</label>
+            <input id="txn-date" type="date" required />
+            </div>
+
+            <div class="row">
+            <label class="visually-hidden" for="txn-note">Note</label>
+            <input id="txn-note" type="text" placeholder="Note (optional)" />
+            <button id="txn-add" class="btn" type="submit">Add</button>
+            </div>
+        </form>
+        </details>
+    </div>
+    </section>
+
 
       <!-- STORE MODE tab -->
       <section id="panel-store" class="panel">
@@ -103,7 +161,7 @@
       </button>
       <button data-tab="spending" class="tab" aria-label="Spending">
         <img class="icon" src="./assets/icons/earnings.png" alt="">
-        <span>Overview</span>
+        <span>Spending</span>
       </button>
       <button data-tab="store" class="tab" aria-label="Store mode">
         <img class="icon" src="./assets/icons/store.png" alt="">
