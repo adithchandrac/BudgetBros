@@ -28,7 +28,7 @@ body{
   font-family:Arial, Helvetica, sans-serif;
   color:var(--ink);
   background:#e5e7eb; /* page bg outside phone (soft gray) */
-  font-size:16px;     /* base size (↑) for readability */
+  font-size:16px;     /* base size for readability */
   line-height:1.5;
 }
 
@@ -41,9 +41,9 @@ body{
   display:grid;
   grid-template-rows:1fr auto;
 }
-@media (min-width:700px){
+@media (min-width:640px){
   body{display:grid;place-items:start center;padding:16px}
-  .phone{border:1px solid var(--line);border-radius:16px;background:var(--bg)}
+  .graph-box { font-size: 18px; }
 }
 
 /* panels */
@@ -94,7 +94,11 @@ input[type="date"]{
   display:grid;place-items:center;gap:2px;padding:10px 0;
   font-size:14px;cursor:pointer;min-height:48px;font-weight:600;
 }
-.tab .icon{width:24px;height:24px;display:block;object-fit:contain;   filter: brightness(0) saturate(100%);}
+/* make PNG icons black */
+.tab .icon{
+  width:24px;height:24px;display:block;object-fit:contain;
+  filter: brightness(0) saturate(100%);
+}
 .tab.active{background:#f1f5f9} /* subtle */
 .tab span{display:block;font-size:12px;color:var(--tab-ink)}
 
@@ -243,3 +247,5 @@ input[type="date"]{
   font-weight:900;font-size:20px;cursor:pointer;padding:4px 6px;align-self:start;
 }
 .txn-del:hover{opacity:1}
+
+

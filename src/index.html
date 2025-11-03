@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Budget App Prototype</title>
   <link rel="stylesheet" href="./styles/main.css" />
 </head>
@@ -10,13 +10,12 @@
   <main class="phone">
     <div id="panels" class="panels">
 
-      <!-- HOME (from Figma mock) -->
       <section id="panel-home" class="panel show">
         <header class="header">
           <h1 class="home-hello">Hello User</h1>
         </header>
 
-    <div class="content scroll home-grid">
+    <div class="content scroll">
           <div class="home-meta">
             <div>Your Budget</div>
             <div class="home-range">
@@ -41,13 +40,6 @@
             You are under your daily budget of $100 at 70%.<br/>
             Great job being fiscally responsible!
           </p>
-
-          <div class="home-insights-label">Insights:</div>
-          <div class="home-insight-lines">
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
-          </div>
         </div>
       </section>
 
@@ -65,11 +57,6 @@
     <header class="header"><h1>Spending</h1></header>
 
     <div class="content scroll">
-        <!-- Graph placeholder (leave space, not implemented) -->
-        <div class="graph-placeholder" aria-label="Spending graph area">
-        <div class="graph-box"><span>Graph placeholder</span></div>
-        </div>
-
         <!-- Transactions toolbar -->
         <div class="txn-toolbar">
         <h2 class="txn-title">Transactions</h2>
@@ -127,12 +114,20 @@
     </section>
 
 
-      <!-- STORE MODE tab -->
-      <section id="panel-store" class="panel">
-        <header class="header"><h1>Store mode</h1></header>
+      <!-- ANALYTICS tab -->
+      <section id="panel-analytics" class="panel">
+        <header class="header"><h1>Analytics</h1></header>
         <div class="content scroll">
-          <p class="out">Quick-entry view while shopping (low-friction logging).</p>
-          <!-- store-mode quick log UI -->
+          <p class="out">Spending breakdowns and trends (prototype views).</p>
+
+          <!-- Example analytics placeholders (offline-friendly) -->
+          <div class="graph-placeholder" aria-label="Category breakdown">
+            <div class="graph-box"><span>Category breakdown (pie)</span></div>
+          </div>
+
+          <div class="graph-placeholder" aria-label="Spending over time">
+            <div class="graph-box"><span>Spending over time (line)</span></div>
+          </div>
         </div>
       </section>
 
@@ -161,9 +156,9 @@
         <img class="icon" src="./assets/icons/earnings.png" alt="">
         <span>Spending</span>
       </button>
-      <button data-tab="store" class="tab" aria-label="Store mode">
-        <img class="icon" src="./assets/icons/store.png" alt="">
-        <span>Store mode</span>
+      <button data-tab="analytics" class="tab" aria-label="Analytics">
+        <img class="icon" src="./assets/icons/data-analytics.png" alt="">
+        <span>Analytics</span>
       </button>
       <button data-tab="profile" class="tab" aria-label="Profile">
         <img class="icon" src="./assets/icons/user-list-icon.png" alt="">
