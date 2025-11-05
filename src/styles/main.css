@@ -140,6 +140,54 @@ input[type="date"]{
 .home-range .is-active { background:var(--accent); color:var(--accent-contrast); border-color:var(--accent); }
 
 .home-budget-title { margin-top: 4px; font-size: 20px; font-weight: 700; }
+.home-range{ display: flex; justify-content: center;}
+
+.budget-table {
+  display: flex;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.budgets {
+  border-collapse: collapse;
+  width: 80%;
+  max-width: 800px;
+  background-color: var(--bg);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.budgets th {
+  background-color: var(--muted);
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 5px 5px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.budgets td {
+  padding: 4px 8px;
+  border-bottom: 1px solid #e6e9ef;
+  color: #333;
+  min-width: 100px;
+}
+
+
+.budgets tr:last-child td {
+  border-bottom: none;
+}
+
+.profile-form{
+  display: list-item;
+}
+
+.input{
+  padding: 3px 3px 3px;
+}
+#edit-button{ padding: auto; margin: 25px;}
 
 /* Donut area */
 .donut-wrap{ display:flex; justify-content:center; align-items:center; margin-top:-6px; color:var(--ink); }
@@ -247,6 +295,21 @@ input[type="date"]{
   font-weight:900;font-size:20px;cursor:pointer;padding:4px 6px;align-self:start;
 }
 .txn-del:hover{opacity:1}
+
+/* PROFILE STYLES*/
+.profile-content{
+ display: flex;
+ flex-direction: column;
+align-items: center;}
+
+.profile-header{
+  font-size: larger;
+}
+
+.pfp-icon{
+  height: 180px;
+  width: 180px;
+}
 
 
 /* =========================================

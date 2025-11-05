@@ -19,7 +19,7 @@
           <div class="home-meta">
             <div>Your Budget</div>
             <div class="home-range">
-              <span>Today</span>
+              <span >Today</span>
               <span class="is-active">Week</span>
               <span>Month</span>
               <span>Year</span>
@@ -48,7 +48,17 @@
         <header class="header"><h1>Budget</h1></header>
         <div class="content scroll">
           <p class="out">Set monthly limits by category and create savings goals.</p>
-          <!-- your budget forms/components go here -->
+             <div class="home-range">
+              <span id="budget-tday">Today</span>
+              <span id="budget-week">Week</span>
+              <span id="budget-month">Month</span>
+              <span id="budget-year">Year</span>
+            </div>
+            <div class="budget-table">
+              <p id="budget-overview"></p>
+            </div>
+
+
         </div>
       </section>
 
@@ -131,13 +141,21 @@
         </div>
       </section>
 
-      <!-- PROFILE tab (kept simple) -->
+      <!-- PROFILE tab -->
       <section id="panel-profile" class="panel">
         <header class="header"><h1>Profile</h1></header>
-        <div class="content scroll">
-          <button id="profile-btn" class="btn" type="button">Show notice</button>
-          <p class="out">Account and preferences (coming soon).</p>
-        </div>
+          <div class="profile-content">
+            <div>
+              <img class="pfp-icon" src="./assets/icons/pfp.png"></img>
+            </div>
+            <h1>Account and preferences</h1>
+            <table class="budgets">
+            <tr><td>Yearly Income:</td> <td><input class="input" type="number"></td></tr>
+            <tr><td>Name:</td> <td><input class="input" type="text"></td></tr>
+            </table>
+            </div>
+            </div>
+          </div>
       </section>
 
     </div>

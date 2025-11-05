@@ -173,3 +173,49 @@ if(form){
 
 // First render (All)
 renderTransactions('all');
+
+
+const spans = document.querySelectorAll('span[id^="budget-"]');
+const overview = document.getElementById('budget-overview');
+
+  const BUDGETS = {
+    Today: {
+      Utilities: 5, Transportation: 10, "Groceries & Food": 25, Bills: 0,
+      Education: 0, Entertainment: 10, Insurance: 0, Medical: 0
+    },
+    Week: {
+      Utilities: 30, Transportation: 60, "Groceries & Food": 150, Bills: 50,
+      Education: 40, Entertainment: 60, Insurance: 25, Medical: 20
+    },
+    Month: {
+      Utilities: 120, Transportation: 250, "Groceries & Food": 600, Bills: 200,
+      Education: 150, Entertainment: 250, Insurance: 120, Medical: 100
+    },
+    Year: {
+      Utilities: 1440, Transportation: 3000, "Groceries & Food": 7200, Bills: 2400,
+      Education: 1800, Entertainment: 3000, Insurance: 1440, Medical: 1200
+    }
+  };
+
+  function renderBudget(period) {
+    const data = BUDGETS[period];
+    let ret = `<table class='budgets' ">
+                 <tr><th>Category</th><th>Cap($)</th></tr>`;
+    for (const category in data) {
+      const amount = data[category];
+      ret += `<tr><td>${category}</td><td>${amount.toFixed(2)}</td></tr>`;
+    }
+    ret += `</table>             <button id="edit-button" class="btn">Edit Budget</button>`;
+    overview.innerHTML = ret;
+  }
+
+  // Handle clicks and class toggling
+  spans.forEach(span => {
+    span.addEventListener('click', () => {
+      spans.forEach(s => s.classList.remove('is-active'));
+      span.classList.add('is-active');
+      const period = span.textContent.trim();
+      renderBudget(period);
+    });
+  });
+
