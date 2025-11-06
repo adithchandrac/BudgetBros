@@ -123,7 +123,6 @@
     </div>
     </section>
 
-
       <!-- ANALYTICS tab -->
       <section id="panel-analytics" class="panel">
         <header class="header"><h1>Analytics</h1></header>
@@ -132,14 +131,22 @@
 
           <!-- Example analytics placeholders (offline-friendly) -->
           <div class="graph-placeholder" aria-label="Category breakdown">
-            <div class="graph-box"><span>Category breakdown (pie)</span></div>
+            <div class="spending-pie-title">
+              <h2 class="spending-pie-header">Spending Breakdown</h2>
+            <canvas id="category-pie" width="260" height="260"></canvas>
+            <ul id="category-legend"></ul>
           </div>
 
-          <div class="graph-placeholder" aria-label="Spending over time">
-            <div class="graph-box"><span>Spending over time (line)</span></div>
-          </div>
-        </div>
-      </section>
+          <!-- Spending over time (interactive graph) -->
+          <div class="spending-graph-title">
+            <h2 class="spending-graph-header">Spending Trends Overtime</h2>
+            <div class="spending-meta">
+              <div class="spending-range">
+                <span data-range="week" class="is-active">Week</span>
+                <span data-range="month">Month</span>
+                <span data-range="year">Year</span>
+              </div>
+            </div>
 
       <!-- PROFILE tab -->
       <section id="panel-profile" class="panel">
