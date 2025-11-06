@@ -219,3 +219,165 @@ const overview = document.getElementById('budget-overview');
     });
   });
 
+// === SPENDING GRAPH WITH PERFECT AXIS ALIGNMENT ===
+(function() {
+  const canvas = document.getElementById('spending-graph');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const data = {
+    week: [40, 60, 50, 70, 90, 80, 100],
+    month: [200, 300, 250, 400, 350, 450, 500],
+    year: [600, 550, 500, 450, 400, 350, 300] // downward trend
+  };
+
+  const buttons = document.querySelectorAll('.spending-range span');
+  const insights = document.getElementById('spending-insight-list');
+
+  function draw(values, label) {
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    const marginLeft = 80;
+    const marginRight = 20;
+    const marginTop = 20;
+    const marginBottom = 60;
+
+    const max = Math.max(...values);
+    const yZero = h - marginBottom;
+    const xStart = marginLeft;
+    const xEnd = w - marginRight;
+    const stepX = (xEnd - xStart) / (values.length - 1);
+    const trend = values[values.length - 1] - values[0];
+    const color = trend >= 0 ? 'green' : 'red';
+
+    // Determine time unit
+    let timeUnit = '';
+    if (label === 'week' || label === 'month') timeUnit = 'days';
+    else if (label === 'year') timeUnit = 'months';
+    else timeUnit = 'hours';
+
+    // === Axes ===
+    ctx.strokeStyle = '#666';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(xStart, marginTop);
+    ctx.lineTo(xStart, yZero);
+    ctx.lineTo(xEnd, yZero);
+    ctx.stroke();
+
+    // === Y-axis Labels ===
+    ctx.fillStyle = '#222';
+    ctx.font = '13px Arial';
+    ctx.textAlign = 'right';
+    const ySteps = 5;
+    for (let i = 0; i <= ySteps; i++) {
+      const val = max - (max / ySteps) * i;
+      const y = marginTop + ((yZero - marginTop) * i) / ySteps;
+      ctx.fillText(val.toFixed(0), xStart - 5, y + 4);
+
+      // gridline
+      ctx.beginPath();
+      ctx.moveTo(xStart, y);
+      ctx.lineTo(xEnd, y);
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.stroke();
+    }
+
+    // === X-axis Labels ===
+    ctx.fillStyle = '#222';
+    ctx.font = '13px Arial';
+    ctx.textAlign = 'center';
+    for (let i = 0; i < values.length; i++) {
+      const x = xStart + i * stepX;
+      ctx.fillText(i + 1, x + 2, yZero + 18); // shifted slightly right (+2)
+    }
+
+    // === Axis Titles ===
+    ctx.font = 'bold 14px Arial';
+    ctx.fillStyle = '#111';
+    ctx.fillText(`Time (${timeUnit})`, (w / 2), h - 15); // centered X title
+
+    // Center Y-axis title within graph area
+    const yCenter = marginTop + (yZero - marginTop) / 2;
+    ctx.save();
+    ctx.translate(25, yCenter);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Spending ($)', 0, 0);
+    ctx.restore();
+
+    // === Draw Line ===
+    ctx.beginPath();
+    ctx.moveTo(xStart, yZero - (values[0] / max) * (yZero - marginTop));
+    for (let i = 1; i < values.length; i++) {
+      const x = xStart + i * stepX;
+      const y = yZero - (values[i] / max) * (yZero - marginTop);
+      ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+  }
+
+  function showInsights(values, label) {
+    const trend = values[values.length - 1] - values[0];
+    const direction = trend >= 0 ? 'upward' : 'downward';
+    insights.innerHTML = `
+      <li>${label} trend: <strong style="color:${trend >= 0 ? 'green' : 'red'}">${direction}</strong></li>
+    `;
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      const range = btn.dataset.range;
+      draw(data[range], range);
+      showInsights(data[range], range);
+    });
+  });
+
+  // Initial draw
+  draw(data.week, 'week');
+  showInsights(data.week, 'week');
+})();
+
+// === PIE CHART ===
+(function() {
+  const canvas = document.getElementById('category-pie');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const legend = document.getElementById('category-legend');
+
+  //example data
+  const data = {
+    Groceries: 30,
+    Dining: 20,
+    Books: 10,
+    Coffee: 15,
+    Health: 25
+  };
+
+  const colors = ['#4caf50', '#ff9800', '#2196f3', '#e91e63', '#9c27b0'];
+
+  const entries = Object.entries(data);
+  const total = entries.reduce((a, [, v]) => a + v, 0);
+
+  let start = 0;
+  entries.forEach(([label, value], i) => {
+    const angle = (value / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(130, 130);
+    ctx.arc(130, 130, 100, start, start + angle);
+    ctx.closePath();
+    ctx.fillStyle = colors[i];
+    ctx.fill();
+    start += angle;
+  });
+
+  // Simple legend
+  legend.innerHTML = entries.map(
+    ([label, _], i) => `<li><span style="background:${colors[i]}"></span>${label}</li>`
+  ).join('');
+})();
