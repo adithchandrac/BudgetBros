@@ -273,7 +273,7 @@ const overview = document.getElementById('budget-overview');
     renderBudget('Month');
   }
 
-// === SPENDING GRAPH WITH PERFECT AXIS ALIGNMENT ===
+//Spending Graph
 (function() {
   const canvas = document.getElementById('spending-graph');
   if (!canvas) return;
@@ -281,12 +281,11 @@ const overview = document.getElementById('budget-overview');
 
   const data = {
     week: [40, 60, 50, 70, 90, 80, 100],
-    month: [200, 300, 250, 500],
-    year: [600, 520, 500, 460, 400, 355, 300, 50, 100, 150, 70, 70] // downward trend
+    month: [200, 300, 250, 400, 350, 450, 500],
+    year: [600, 550, 500, 450, 400, 350, 300] // downward trend
   };
 
   const buttons = document.querySelectorAll('.spending-range span');
-  const insights = document.getElementById('spending-insight-list');
 
   function draw(values, label) {
     const w = canvas.width;
@@ -308,8 +307,7 @@ const overview = document.getElementById('budget-overview');
 
     // Determine time unit
     let timeUnit = '';
-    if (label === 'week') timeUnit = 'days';
-    else if (label === 'month') timeUnit = 'weeks'
+    if (label === 'week' || label === 'month') timeUnit = 'days';
     else if (label === 'year') timeUnit = 'months';
     else timeUnit = 'hours';
 
@@ -346,13 +344,13 @@ const overview = document.getElementById('budget-overview');
     ctx.textAlign = 'center';
     for (let i = 0; i < values.length; i++) {
       const x = xStart + i * stepX;
-      ctx.fillText(i + 1, x + 2, yZero + 18); // shifted slightly right (+2)
+      ctx.fillText(i + 1, x + 2, yZero + 18);
     }
 
     // === Axis Titles ===
     ctx.font = 'bold 14px Arial';
     ctx.fillStyle = '#111';
-    ctx.fillText(`Time (${timeUnit})`, (w / 2), h - 15); // centered X title
+    ctx.fillText(`Time (${timeUnit})`, (w / 2), h - 15);
 
     // Center Y-axis title within graph area
     const yCenter = marginTop + (yZero - marginTop) / 2;
@@ -375,27 +373,17 @@ const overview = document.getElementById('budget-overview');
     ctx.stroke();
   }
 
-  function showInsights(values, label) {
-    const trend = values[values.length - 1] - values[0];
-    const direction = trend >= 0 ? 'Upward' : 'Downward';
-    insights.innerHTML = `
-      <li>Trend for ${label}: <strong style="color:${trend >= 0 ? 'green' : 'red'}">${direction}</strong></li>
-    `;
-  }
-
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
       buttons.forEach(b => b.classList.remove('is-active'));
       btn.classList.add('is-active');
       const range = btn.dataset.range;
       draw(data[range], range);
-      showInsights(data[range], range);
     });
   });
 
   // Initial draw
   draw(data.week, 'week');
-  showInsights(data.week, 'week');
 })();
 
 // === PIE CHART ===
