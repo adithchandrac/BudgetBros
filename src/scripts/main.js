@@ -218,6 +218,12 @@ const overview = document.getElementById('budget-overview');
     });
   });
 
+  const defaultBudgetSpan = document.getElementById('budget-month');
+  if (defaultBudgetSpan) {
+    defaultBudgetSpan.classList.add('is-active');
+    renderBudget('Month');
+  }
+
 // === SPENDING GRAPH WITH PERFECT AXIS ALIGNMENT ===
 (function() {
   const canvas = document.getElementById('spending-graph');
@@ -226,8 +232,8 @@ const overview = document.getElementById('budget-overview');
 
   const data = {
     week: [40, 60, 50, 70, 90, 80, 100],
-    month: [200, 300, 250, 400, 350, 450, 500],
-    year: [600, 550, 500, 450, 400, 350, 300] // downward trend
+    month: [200, 300, 250, 500],
+    year: [600, 520, 500, 460, 400, 355, 300, 50, 100, 150, 70, 70] // downward trend
   };
 
   const buttons = document.querySelectorAll('.spending-range span');
@@ -253,7 +259,8 @@ const overview = document.getElementById('budget-overview');
 
     // Determine time unit
     let timeUnit = '';
-    if (label === 'week' || label === 'month') timeUnit = 'days';
+    if (label === 'week') timeUnit = 'days';
+    else if (label === 'month') timeUnit = 'weeks'
     else if (label === 'year') timeUnit = 'months';
     else timeUnit = 'hours';
 
@@ -321,9 +328,9 @@ const overview = document.getElementById('budget-overview');
 
   function showInsights(values, label) {
     const trend = values[values.length - 1] - values[0];
-    const direction = trend >= 0 ? 'upward' : 'downward';
+    const direction = trend >= 0 ? 'Upward' : 'Downward';
     insights.innerHTML = `
-      <li>${label} trend: <strong style="color:${trend >= 0 ? 'green' : 'red'}">${direction}</strong></li>
+      <li>Trend for ${label}: <strong style="color:${trend >= 0 ? 'green' : 'red'}">${direction}</strong></li>
     `;
   }
 
