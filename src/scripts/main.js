@@ -21,7 +21,7 @@
   });
 
   /* land on the new Home */
-  show('home');
+  show('spending');
 
   /* demo notice (kept) */
   const profileBtn = $('#profile-btn');
