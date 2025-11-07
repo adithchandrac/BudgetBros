@@ -412,23 +412,9 @@ align-items: center;}
   justify-content: center;
   align-items: center;
   margin-bottom: 24px;
+  transform: translateY(-10px);
 }
 
-.spending-insights h3 {
-  margin-bottom: 8px;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.spending-insights ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  color: var(--muted);
-  font-size: 18px;
-  line-height: 1.7;
-}
 
 .spending-graph-header {
   display: flex;
@@ -436,6 +422,7 @@ align-items: center;}
   align-items: center;
   width: 100%;
   max-width: 600px;
+  transform: translateY(10px);
 }
 
 .spending-graph-title {
@@ -444,6 +431,7 @@ align-items: center;}
   align-items: center;
   color: var(--ink);
   margin-top: 16px;
+  transform: translateY(-20px);
 }
 /*pie chart visuals*/
 #category-pie {
@@ -467,6 +455,7 @@ align-items: center;}
   display: flex;
   align-items: center;
   gap: 6px;
+  transform: translateY(-10px);
 }
 
 #category-legend span {
@@ -490,4 +479,41 @@ align-items: center;}
   align-items: center;
   color: var(--ink);
   margin-top: 16px;
+}
+
+/* === Trend Legend === */
+.trend-legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 20px;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.trend-legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.trend-legend span {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.trend-legend .trend-up {
+  background-color: green;
+}
+
+.trend-legend .trend-down {
+  background-color: red;
+}
+
+.visually-hidden {
+  display: none;
 }
