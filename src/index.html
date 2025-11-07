@@ -9,164 +9,170 @@
    <body>
       <main class="phone">
          <div id="panels" class="panels">
-            <section id="panel-home" class="panel show">
-               <header class="header">
-                  <h1 class="home-hello">Hello User</h1>
-               </header>
-               <div class="content scroll">
-                  <div class="home-meta">
-                     <div>Your Budget</div>
-                     <div class="home-range">
-                        <span >Today</span>
-                        <span class="is-active">Week</span>
-                        <span>Month</span>
-                        <span>Year</span>
-                     </div>
-                  </div>
-                  <div class="home-budget-title">Daily Budget: $100</div>
-                  <div class="donut-wrap">
-                     <svg width="180" height="180" viewBox="0 0 180 180" role="img" aria-label="70 percent">
-                        <circle cx="90" cy="90" r="70" fill="none" stroke="#e2e8f0" stroke-width="20"></circle>
-                        <circle cx="90" cy="90" r="70" fill="none" stroke="#0b5fff" stroke-width="20"
-                           stroke-dasharray="307 440" stroke-linecap="round"
-                           transform="rotate(-90 90 90)"></circle>
-                        <text x="90" y="98" text-anchor="middle" font-size="36" font-weight="800" fill="currentColor">70%</text>
-                     </svg>
-                  </div>
-                  <p class="home-status">
-                     You are under your daily budget of $100 at 70%.<br/>
-                     Great job being fiscally responsible!
-                  </p>
-               </div>
-            </section>
-            <!-- BUDGET tab (placeholder content; keep your existing controls here) -->
-            <section id="panel-budget" class="panel">
-               <header class="header">
-                  <h1>Budget</h1>
-               </header>
-               <div class="content scroll">
-                  <p class="out">Set monthly limits by category and create savings goals.</p>
+         <section id="panel-home" class="panel show">
+            <header class="header">
+               <h1 class="home-hello">Hello User</h1>
+            </header>
+            <div class="content scroll">
+               <div class="home-meta">
+                  <div>Your Budget</div>
                   <div class="home-range">
-                     <span id="budget-tday">Today</span>
-                     <span id="budget-week">Week</span>
-                     <span id="budget-month">Month</span>
-                     <span id="budget-year">Year</span>
-                  </div>
-                  <div class="budget-table">
-                     <p id="budget-overview"></p>
+                     <span >Today</span>
+                     <span class="is-active">Week</span>
+                     <span>Month</span>
+                     <span>Year</span>
                   </div>
                </div>
-            </section>
-            <!-- SPENDING tab: graph placeholder + transactions + filter + add/remove -->
-            <section id="panel-spending" class="panel">
-               <header class="header">
-                  <h1>Spending</h1>
-               </header>
-               <div class="content scroll">
-                  <!-- Transactions toolbar -->
-                  <div class="txn-toolbar">
-                     <h2 class="txn-title">Transactions</h2>
-                     <div class="seg">
-                        <button class="seg-btn is-selected" data-filter="all" aria-pressed="true">All</button>
-                        <button class="seg-btn" data-filter="expense" aria-pressed="false">Expenses</button>
-                        <button class="seg-btn" data-filter="income" aria-pressed="false">Income</button>
-                     </div>
-                  </div>
-                  <!-- Recent transactions list -->
-                  <div id="txn-list" class="txn-list" role="list" aria-label="Recent transactions"></div>
-                  <!-- Log additional (collapsible add form) -->
-                  <details class="txn-disclosure">
-                     <summary class="btn btn-ghost">Log additional</summary>
-                     <form id="txn-form" class="txn-form" autocomplete="off">
-                        <div class="row">
-                           <label class="visually-hidden" for="txn-type">Type</label>
-                           <select id="txn-type" required>
-                              <option value="expense">Expense</option>
-                              <option value="income">Income</option>
-                           </select>
-                           <label class="visually-hidden" for="txn-amount">Amount</label>
-                           <input id="txn-amount" type="number" step="0.01" min="0.01" placeholder="Amount" required />
-                        </div>
-                        <div class="row">
-                           <label class="visually-hidden" for="txn-category">Category</label>
-                           <select id="category" name="category" required>
-                              <option value="">  Choose a category  </option>
-                              <option value="Education">Education</option>
-                              <option value="Savings & investment">Savings & investment</option>
-                              <option value="Credit card/debt repayment">Credit card/debt repayment</option>
-                              <option value="Auto/transit">Auto/transit</option>
-                              <option value="Dining">Dining</option>
-                              <option value="Groceries">Groceries</option>
-                              <option value="Shopping">Shopping</option>
-                              <option value="Entertainment">Entertainment</option>
-                              <option value="Personal care">Personal care</option>
-                              <option value="Travel">Travel</option>
-                              <option value="Business">Business</option>
-                              <option value="Utility">Utility</option>
-                              <option value="Insurance">Insurance</option>
-                              <option value="Other - necessary purchase">Other - necessary purchase</option>
-                              <option value="Miscellaneous">Miscellaneous</option>
-                           </select>
-                           <label class="visually-hidden" for="txn-date">Date</label>
-                           <input id="txn-date" type="date" required />
-                        </div>
-                        <div class="row">
-                           <label class="visually-hidden" for="txn-note">Note</label>
-                           <input id="txn-note" type="text" placeholder="Note (optional)" />
-                           <button id="txn-add" class="btn" type="submit">Add</button>
-                        </div>
-                     </form>
-                  </details>
+               <div class="home-budget-title">Daily Budget: $100</div>
+               <div class="donut-wrap">
+                  <svg width="180" height="180" viewBox="0 0 180 180" role="img" aria-label="70 percent">
+                     <circle cx="90" cy="90" r="70" fill="none" stroke="#e2e8f0" stroke-width="20"></circle>
+                     <circle cx="90" cy="90" r="70" fill="none" stroke="#0b5fff" stroke-width="20"
+                        stroke-dasharray="307 440" stroke-linecap="round"
+                        transform="rotate(-90 90 90)"></circle>
+                     <text x="90" y="98" text-anchor="middle" font-size="36" font-weight="800" fill="currentColor">70%</text>
+                  </svg>
                </div>
-            </section>
-            <!-- ANALYTICS tab -->
-            <section id="panel-analytics" class="panel">
-               <header class="header">
-                  <h1>Analytics</h1>
-               </header>
-               <div class="content scroll">
-                  <!-- Example analytics placeholders (offline-friendly) -->
-                  <div class="graph-placeholder" aria-label="Category breakdown">
-                     <div class="spending-pie-title">
-                        <h2 class="spending-pie-header">Spending Breakdown</h2>
-                        <canvas id="category-pie" width="260" height="260"></canvas>
-                        <ul id="category-legend"></ul>
+               <p class="home-status">
+                  You are under your daily budget of $100 at 70%.<br/>
+                  Great job being fiscally responsible!
+               </p>
+            </div>
+         </section>
+         <!-- BUDGET tab (placeholder content; keep your existing controls here) -->
+         <section id="panel-budget" class="panel">
+            <header class="header">
+               <h1>Budget</h1>
+            </header>
+            <div class="content scroll">
+               <p class="out">Set monthly limits by category and create savings goals.</p>
+               <div class="home-range">
+                  <span id="budget-tday">Today</span>
+                  <span id="budget-week">Week</span>
+                  <span id="budget-month">Month</span>
+                  <span id="budget-year">Year</span>
+               </div>
+               <div class="budget-table">
+                  <p id="budget-overview"></p>
+               </div>
+            </div>
+         </section>
+         <!-- SPENDING tab: graph placeholder + transactions + filter + add/remove -->
+         <section id="panel-spending" class="panel">
+            <header class="header">
+               <h1>Spending</h1>
+            </header>
+            <div class="content scroll">
+               <!-- Transactions toolbar -->
+               <div class="txn-toolbar">
+                  <h2 class="txn-title">Transactions</h2>
+                  <div class="seg">
+                     <button class="seg-btn is-selected" data-filter="all" aria-pressed="true">All</button>
+                     <button class="seg-btn" data-filter="expense" aria-pressed="false">Expenses</button>
+                     <button class="seg-btn" data-filter="income" aria-pressed="false">Income</button>
+                  </div>
+               </div>
+               <!-- Recent transactions list -->
+               <div id="txn-list" class="txn-list" role="list" aria-label="Recent transactions"></div>
+               <!-- Log additional (collapsible add form) -->
+               <details class="txn-disclosure">
+                  <summary class="btn btn-ghost">Log additional</summary>
+                  <form id="txn-form" class="txn-form" autocomplete="off">
+                     <div class="row">
+                        <label class="visually-hidden" for="txn-type">Type</label>
+                        <select id="txn-type" required>
+                           <option value="expense">Expense</option>
+                           <option value="income">Income</option>
+                        </select>
+                        <label class="visually-hidden" for="txn-amount">Amount</label>
+                        <input id="txn-amount" type="number" step="0.01" min="0.01" placeholder="Amount" required />
                      </div>
-                     <!-- Spending over time (interactive graph) -->
-                     <div class="spending-graph-title">
-                        <h2 class="spending-graph-header">Spending Trends Overtime</h2>
-                        <div class="spending-meta">
-                           <div class="spending-range">
-                              <span data-range="week" class="is-active">Week</span>
-                              <span data-range="month">Month</span>
-                              <span data-range="year">Year</span>
-                           </div>
-                        </div>
-                        <div class="spending-graph-wrap">
-                           <canvas id="spending-graph" width="450" height="180"></canvas>
-                        </div>
-                        <div class="spending-insights">
-                           <h3>Insights</h3>
-                           <ul id="spending-insight-list"></ul>
-                        </div>
+                     <div class="row">
+                        <label class="visually-hidden" for="txn-category">Category</label>
+                        <select id="category" name="category" required>
+                           <option value="">  Choose a category  </option>
+                           <option value="Education">Education</option>
+                           <option value="Savings & investment">Savings & investment</option>
+                           <option value="Credit card/debt repayment">Credit card/debt repayment</option>
+                           <option value="Auto/transit">Auto/transit</option>
+                           <option value="Dining">Dining</option>
+                           <option value="Groceries">Groceries</option>
+                           <option value="Shopping">Shopping</option>
+                           <option value="Entertainment">Entertainment</option>
+                           <option value="Personal care">Personal care</option>
+                           <option value="Travel">Travel</option>
+                           <option value="Business">Business</option>
+                           <option value="Utility">Utility</option>
+                           <option value="Insurance">Insurance</option>
+                           <option value="Other - necessary purchase">Other - necessary purchase</option>
+                           <option value="Miscellaneous">Miscellaneous</option>
+                        </select>
+                        <label class="visually-hidden" for="txn-date">Date</label>
+                        <input id="txn-date" type="date" required />
                      </div>
-            </section>
-            <!-- PROFILE tab -->
-            <section id="panel-profile" class="panel">
-            <header class="header"><h1>Profile</h1></header>
+                     <div class="row">
+                        <label class="visually-hidden" for="txn-note">Note</label>
+                        <input id="txn-note" type="text" placeholder="Note (optional)" />
+                        <button id="txn-add" class="btn" type="submit">Add</button>
+                     </div>
+                  </form>
+               </details>
+            </div>
+         </section>
+         <!-- ANALYTICS tab -->
+         <section id="panel-analytics" class="panel">
+            <header class="header">
+               <h1>Analytics</h1>
+            </header>
+            <div class="content scroll">
+            <!-- Example analytics placeholders (offline-friendly) -->
+            <div class="graph-placeholder" aria-label="Category breakdown">
+            <div class="spending-pie-title">
+               <h2 class="spending-pie-header">Spending Breakdown</h2>
+               <canvas id="category-pie" width="260" height="260"></canvas>
+               <ul id="category-legend"></ul>
+            </div>
+            <!-- Spending over time (interactive graph) -->
+            <div class="spending-graph-title">
+               <h2 class="spending-graph-header">Spending Trends Overtime</h2>
+               <div class="spending-meta">
+                  <div class="spending-range">
+                     <span data-range="week" class="is-active">Week</span>
+                     <span data-range="month">Month</span>
+                     <span data-range="year">Year</span>
+                  </div>
+               </div>
+               <div class="spending-graph-wrap">
+                  <canvas id="spending-graph" width="450" height="180"></canvas>
+               </div>
+               <div class="spending-insights">
+                  <h3>Insights</h3>
+                  <ul id="spending-insight-list"></ul>
+               </div>
+            </div>
+         </section>
+         <!-- PROFILE tab -->
+         <section id="panel-profile" class="panel">
+            <header class="header">
+               <h1>Profile</h1>
+            </header>
             <div class="profile-content">
-            <div>
-            <img class="pfp-icon" src="./assets/icons/pfp.png"></img>
-            </div>
-            <h1>Account and preferences</h1>
-            <table class="budgets">
-            <tr><td>Yearly Income:</td> <td><input class="input" type="number"></td></tr>
-            <tr><td>Name:</td> <td><input class="input" type="text"></td></tr>
-            </table>
-            </div>
-            </div>
-            </div>
-            </section>
+               <div>
+                  <img class="pfp-icon" src="./assets/icons/pfp.png"></img>
+               </div>
+               <h1>Account and preferences</h1>
+               <table class="budgets">
+                  <tr>
+                     <td>Yearly Income:</td>
+                     <td><input class="input" type="number"></td>
+                  </tr>
+                  <tr>
+                     <td>Name:</td>
+                     <td><input class="input" type="text"></td>
+                  </tr>
+               </table>
+               </div>
+         </section>
          </div>
          <!-- bottom nav — tabs match the mock -->
          <nav class="tabs">

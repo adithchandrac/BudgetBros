@@ -33,25 +33,6 @@
 
 // ====== Spending: graph placeholder + transactions + filter + add/remove (localStorage) ======
 const STORAGE_KEY = 'cmsc434.transactions.v1';
-const categories = [
-  "Education",
-  "Savings & investment",
-  "Credit card/debt repayment",
-  "Auto/transit",
-  "Dining",
-  "Groceries",
-  "Shopping",
-  "Entertainment",
-  "Personal care",
-  "Travel",
-  "Business",
-  "Utility",
-  "Insurance",
-  "Other - necessary purchase",
-  "Miscellaneous"
-];
-
-
 function loadTxns(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -82,7 +63,6 @@ const filterBtns = Array.from(document.querySelectorAll('.seg-btn'));
 const form     = document.querySelector('#txn-form');
 const typeEl   = document.querySelector('#txn-type');
 const amtEl    = document.querySelector('#txn-amount');
-const catEl    = document.querySelector('#txn-category');
 const dateEl   = document.querySelector('#txn-date');
 const noteEl   = document.querySelector('#txn-note');
 

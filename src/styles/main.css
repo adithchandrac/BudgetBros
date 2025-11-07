@@ -136,7 +136,7 @@ input[type="date"]{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   color:var(--muted);font-size:16px;gap:6px;margin-top:4px;margin-bottom:-8px;
 }
-.home-range { display:flex; gap:12px; font-weight:600; }
+.home-range { display:flex; gap:12px; font-weight:600; justify-content: center; }
 .home-range span {
   cursor:pointer; padding:6px 12px; border-radius:999px;
   border:1px solid var(--line); background:#ffffff; color:var(--ink);
@@ -145,8 +145,6 @@ input[type="date"]{
 .home-range .is-active { background:var(--accent); color:var(--accent-contrast); border-color:var(--accent); }
 
 .home-budget-title { margin-top: 4px; font-size: 20px; font-weight: 700; }
-.home-range{ display: flex; justify-content: center;}
-
 .budget-table {
   display: flex;
   justify-content: center;
@@ -185,14 +183,10 @@ input[type="date"]{
   border-bottom: none;
 }
 
-.profile-form{
-  display: list-item;
-}
-
 .input{
   padding: 3px 3px 3px;
 }
-#edit-button{ padding: auto; margin: 25px;}
+#edit-button{ padding: 8px 12px;; margin: 25px;}
 
 /* Donut area */
 .donut-wrap{ display:flex; justify-content:center; align-items:center; margin-top:-6px; color:var(--ink); }
@@ -203,18 +197,6 @@ input[type="date"]{
   color:var(--muted); font-size:16px; line-height:1.65;
   margin-top:-4px; max-width:640px;
 }
-
-/* Insights */
-.home-insights-label{ font-size:20px; font-weight:800; align-self:flex-start; margin-top:10px; color:var(--ink); }
-.home-insight-lines{
-  width:100%; display:grid; grid-template-columns:1fr 1fr;
-  gap:16px 24px; margin-top:10px;
-}
-.home-insight-lines .line{
-  height:4px; background: linear-gradient(90deg, #94a3b8 0%, #64748b 100%);
-  border-radius: 2px; opacity: .9;
-}
-.home-insight-lines .line:hover{ opacity:1; transform:scale(1.01); transition: all .2s ease-in-out; }
 
 /* helper */
 .visually-hidden{
@@ -306,10 +288,6 @@ input[type="date"]{
  display: flex;
  flex-direction: column;
 align-items: center;}
-
-.profile-header{
-  font-size: larger;
-}
 
 .pfp-icon{
   height: 180px;
