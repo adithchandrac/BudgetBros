@@ -97,17 +97,25 @@
 
             <div class="row">
             <label class="visually-hidden" for="txn-category">Category</label>
-            <input id="txn-category" list="category-suggestions" placeholder="Category (e.g., Groceries)" required />
-            <datalist id="category-suggestions">
-                <option value="Groceries"></option>
-                <option value="Transportation"></option>
-                <option value="Dining"></option>
-                <option value="Books"></option>
-                <option value="Health"></option>
-                <option value="Coffee"></option>
-                <option value="Paycheck"></option>
-                <option value="Scholarship"></option>
-            </datalist>
+            <select id="category" name="category" required>
+              <option value="">  Choose a category  </option>
+              <option value="Education">Education</option>
+              <option value="Savings & investment">Savings & investment</option>
+              <option value="Credit card/debt repayment">Credit card/debt repayment</option>
+              <option value="Auto/transit">Auto/transit</option>
+              <option value="Dining">Dining</option>
+              <option value="Groceries">Groceries</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Personal care">Personal care</option>
+              <option value="Travel">Travel</option>
+              <option value="Business">Business</option>
+              <option value="Utility">Utility</option>
+              <option value="Insurance">Insurance</option>
+              <option value="Other - necessary purchase">Other - necessary purchase</option>
+              <option value="Miscellaneous">Miscellaneous</option>
+            </select>
+
 
             <label class="visually-hidden" for="txn-date">Date</label>
             <input id="txn-date" type="date" required />

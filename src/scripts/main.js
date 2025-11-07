@@ -33,6 +33,24 @@
 
 // ====== Spending: graph placeholder + transactions + filter + add/remove (localStorage) ======
 const STORAGE_KEY = 'cmsc434.transactions.v1';
+const categories = [
+  "Education",
+  "Savings & investment",
+  "Credit card/debt repayment",
+  "Auto/transit",
+  "Dining",
+  "Groceries",
+  "Shopping",
+  "Entertainment",
+  "Personal care",
+  "Travel",
+  "Business",
+  "Utility",
+  "Insurance",
+  "Other - necessary purchase",
+  "Miscellaneous"
+];
+
 
 function loadTxns(){
   try{
@@ -153,7 +171,7 @@ if(form){
     e.preventDefault();
     const type = (typeEl.value === 'income') ? 'income' : 'expense';
     const amount = parseFloat(amtEl.value);
-    const category = catEl.value.trim();
+    const category = document.getElementById('category').value;
     const date = dateEl.value;
     const note = (noteEl.value || '').trim();
     if(!amount || amount <= 0 || !category || !date) return;
@@ -165,6 +183,7 @@ if(form){
     // Reset quick fields
     amtEl.value = '';
     noteEl.value = '';
+    document.getElementById('category').value = ''
 
     const active = document.querySelector('.seg-btn.is-selected')?.dataset.filter || 'all';
     renderTransactions(active);
