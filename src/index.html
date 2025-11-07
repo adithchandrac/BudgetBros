@@ -133,38 +133,42 @@
 </div>
 
          </section>
-         <!-- ANALYTICS tab -->
-         <section id="panel-analytics" class="panel">
-            <header class="header">
-               <h1>Analytics</h1>
-            </header>
-            <div class="content scroll">
-            <!-- Example analytics placeholders (offline-friendly) -->
-            <div class="graph-placeholder" aria-label="Category breakdown">
+    <!-- ANALYTICS tab -->
+      <section id="panel-analytics" class="panel">
+        <header class="header"><h1>Analytics</h1></header>
+        <div class="content">
+          <p class="out">Spending breakdowns and trends (prototype views).</p>
+
+          <!-- Example analytics placeholders (offline-friendly) -->
+          <div class="graph-placeholder" aria-label="Category breakdown">
             <div class="spending-pie-title">
-               <h2 class="spending-pie-header">Spending Breakdown</h2>
-               <canvas id="category-pie" width="260" height="260"></canvas>
-               <ul id="category-legend"></ul>
+              <h2 class="spending-pie-header">Spending Breakdown</h2>
+            <canvas id="category-pie" width="260" height="260"></canvas>
+            <ul id="category-legend"></ul>
+          </div>
+
+          <!-- Spending over time (interactive graph) -->
+          <div class="spending-graph-title">
+            <h2 class="spending-graph-header">Spending Trends Overtime</h2>
+            <div class="spending-meta">
+              <div class="spending-range">
+                <span data-range="week" class="is-active">Week</span>
+                <span data-range="month">Month</span>
+                <span data-range="year">Year</span>
+              </div>
             </div>
-            <!-- Spending over time (interactive graph) -->
-            <div class="spending-graph-title">
-               <h2 class="spending-graph-header">Spending Trends Overtime</h2>
-               <div class="spending-meta">
-                  <div class="spending-range">
-                     <span data-range="week" class="is-active">Week</span>
-                     <span data-range="month">Month</span>
-                     <span data-range="year">Year</span>
-                  </div>
-               </div>
-               <div class="spending-graph-wrap">
-                  <canvas id="spending-graph" width="450" height="180"></canvas>
-               </div>
-               <div class="spending-insights">
-                  <h3>Insights</h3>
-                  <ul id="spending-insight-list"></ul>
-               </div>
+
+          <!--legend-->
+            <ul class="trend-legend">
+              <li><span class="trend-up"></span> Upward Trend</li>
+              <li><span class="trend-down"></span> Downward Trend</li>
+            </ul>
+
+            <div class="spending-graph-wrap">
+              <canvas id="spending-graph" width="450" height="180"></canvas>
             </div>
-         </section>
+          </div>
+      </section>
          <!-- PROFILE tab -->
          <section id="panel-profile" class="panel">
             <header class="header">
