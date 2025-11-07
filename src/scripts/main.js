@@ -183,7 +183,7 @@ if(form){
     // Reset quick fields
     amtEl.value = '';
     noteEl.value = '';
-    document.getElementById('category').value = ''
+    document.getElementById('category').value = '';
 
     const active = document.querySelector('.seg-btn.is-selected')?.dataset.filter || 'all';
     renderTransactions(active);
