@@ -32,7 +32,7 @@
 })();
 
 // ====== Spending: graph placeholder + transactions + filter + add/remove (localStorage) ======
-const STORAGE_KEY = 'cmsc434.transactions.v1';
+const STORAGE_KEY = 'cmsc434.transactions.v3';
 function loadTxns(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -49,34 +49,80 @@ function saveTxns(arr){
 let transactions = loadTxns() || [
   { id: 1, type: 'expense', category: 'Groceries',      note: 'Trader Joes',      amount: 54.18, date: '2025-10-17' },
   { id: 2, type: 'expense', category: 'Transportation', note: 'Metro card',       amount: 25.00, date: '2025-10-18' },
-  { id: 3, type: 'income',  category: 'Paycheck',       note: 'Campus job',       amount: 320.00, date: '2025-10-18' },
-  { id: 4, type: 'expense', category: 'Dining',         note: 'Lunch with team',  amount: 12.75, date: '2025-10-19' },
-  { id: 5, type: 'expense', category: 'Books',          note: 'Used textbook',    amount: 40.00, date: '2025-10-20' },
-  { id: 6, type: 'income',  category: 'Scholarship',    note: 'Stipend',          amount: 150.00, date: '2025-10-21' },
-  { id: 7, type: 'expense', category: 'Health',         note: 'Yoga class',       amount: 18.00, date: '2025-10-21' },
-  { id: 8, type: 'expense', category: 'Coffee',         note: 'Study break',      amount: 4.75,  date: '2025-10-22' }
+  { id: 3, type: 'income',  category: 'Paycheck',       note: 'Campus job',       amount: 320.00, date: '2025-10-18' }
 ];
 saveTxns(transactions);
 
-const txnList  = document.querySelector('#txn-list');
-const filterBtns = Array.from(document.querySelectorAll('.seg-btn'));
-const form     = document.querySelector('#txn-form');
-const typeEl   = document.querySelector('#txn-type');
-const amtEl    = document.querySelector('#txn-amount');
-const dateEl   = document.querySelector('#txn-date');
-const noteEl   = document.querySelector('#txn-note');
+// Elements
+const txnList   = document.querySelector('#txn-list');
+const addWrap   = document.querySelector('#add-form-wrap');
+const seg       = document.querySelector('#txn-filter-seg');
+const toolbar   = document.querySelector('.txn-toolbar');
+const addRow    = document.querySelector('.txn-add-row');
 
+const form      = document.querySelector('#txn-form');
+const openForm  = document.querySelector('#txn-open-form');
+const cancelBtn = document.querySelector('#txn-cancel');
+
+const typeEl = document.querySelector('#txn-type');
+const amtEl  = document.querySelector('#txn-amount');
+const dateEl = document.querySelector('#txn-date');
+const noteEl = document.querySelector('#txn-note');
+
+// UI state
+let currentMode   = 'list';       // 'list' | 'add'
+let currentFilter = 'all';        // 'all' | 'expense' | 'income'
+
+// Helpers
 function formatCurrency(num){
   return (num < 0 ? '-$' : '$') + Math.abs(num).toFixed(2);
+}
+
+function setMode(mode){
+  currentMode = mode;
+  const inAdd = (mode === 'add');
+
+  // Show ONLY the add form in add mode
+  if (toolbar) toolbar.hidden = inAdd;
+  if (addRow)  addRow.hidden  = inAdd;
+  if (txnList) txnList.hidden = inAdd;
+  if (addWrap) addWrap.hidden = !inAdd;
+
+  if (inAdd) {
+    if (amtEl) amtEl.focus();
+    // ensure date defaults to today each time
+    if (dateEl){
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth()+1).padStart(2,'0');
+      const dd = String(today.getDate()).padStart(2,'0');
+      dateEl.value = `${yyyy}-${mm}-${dd}`;
+    }
+  } else {
+    renderTransactions(currentFilter);
+  }
+}
+
+function setFilter(filter, btn){
+  currentFilter = filter;
+  // update filter buttons UI
+  if (seg){
+    const btns = Array.from(seg.querySelectorAll('.seg-btn[data-filter]'));
+    btns.forEach(b => {
+      const on = (b === btn);
+      b.classList.toggle('is-selected', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+  // always switch to list view when choosing a filter
+  setMode('list');
 }
 
 function renderTransactions(view = 'all'){
   if(!txnList) return;
   txnList.innerHTML = '';
 
-  const filtered = transactions.filter(t =>
-    view === 'all' ? true : t.type === view
-  );
+  const filtered = transactions.filter(t => view === 'all' ? true : t.type === view);
 
   // recent first
   filtered.sort((a, b) => (b.date.localeCompare(a.date)) || (b.id - a.id));
@@ -116,33 +162,34 @@ function renderTransactions(view = 'all'){
       const id = Number(btn.dataset.id);
       transactions = transactions.filter(t => t.id !== id);
       saveTxns(transactions);
-      // preserve current view
-      const active = document.querySelector('.seg-btn.is-selected')?.dataset.filter || 'all';
-      renderTransactions(active);
+      renderTransactions(currentFilter);
     });
   });
 }
 
-// Toggle segmented control
-if(filterBtns.length){
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => {
-        b.classList.toggle('is-selected', b === btn);
-        b.setAttribute('aria-pressed', String(b === btn));
-      });
-      renderTransactions(btn.dataset.filter);
+// Wire filters (All / Expenses / Income)
+if (seg){
+  const btns = Array.from(seg.querySelectorAll('.seg-btn[data-filter]'));
+  btns.forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      setFilter(b.dataset.filter, b);
     });
   });
 }
 
-// Initialize date field to today
-if (dateEl){
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth()+1).padStart(2,'0');
-  const dd = String(today.getDate()).padStart(2,'0');
-  dateEl.value = `${yyyy}-${mm}-${dd}`;
+// Open Add (form-only screen)
+if (openForm){
+  openForm.addEventListener('click', () => {
+    setMode('add');
+  });
+}
+
+// Cancel Add -> back to current list
+if (cancelBtn){
+  cancelBtn.addEventListener('click', () => {
+    setMode('list');
+  });
 }
 
 // Add transaction handler
@@ -160,18 +207,20 @@ if(form){
     transactions.push({ id, type, category, note, amount, date });
     saveTxns(transactions);
 
-    // Reset quick fields
+    // reset quick fields
     amtEl.value = '';
     noteEl.value = '';
     document.getElementById('category').value = '';
 
-    const active = document.querySelector('.seg-btn.is-selected')?.dataset.filter || 'all';
-    renderTransactions(active);
+    // go back to list and re-render using the currently selected filter
+    setMode('list');
   });
 }
 
-// First render (All)
+// Initial render: default to ALL in list mode
+setMode('list');
 renderTransactions('all');
+
 
 
 const spans = document.querySelectorAll('span[id^="budget-"]');
