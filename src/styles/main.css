@@ -149,11 +149,12 @@ input[type="date"]{
   display: flex;
   justify-content: center;
   background: var(--bg);
+  align-content: center;
 }
 
 .budgets {
   border-collapse: collapse;
-  width: 80%;
+  width: 89%;
   max-width: 800px;
   background-color: var(--bg);
   border-radius: 16px;

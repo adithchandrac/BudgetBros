@@ -227,10 +227,17 @@ const spans = document.querySelectorAll('span[id^="budget-"]');
 const overview = document.getElementById('budget-overview');
 
 /*Category list*/ 
-const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "Education", "Business",
-   "Savings", "Investment","Debt Repayment", "Groceries", "Dining", "Shopping"
-   ,"Personal Care","Entertainment","Travel","Other Necessities","Miscellaneous"
-  ];
+const categories = [
+  "Bills & Utilities",
+  "Transportation",
+  "Groceries",
+  "Dining & Entertainment",
+  "Shopping & Personal Care",
+  "Education & Business",
+  "Savings & Investments",
+  "Miscellaneous"
+];
+
 
   const budgets = {
     Daily: new Array(categories.length).fill(0),
