@@ -410,9 +410,9 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
   const ctx = canvas.getContext('2d');
 
   const data = {
-    week: [40, 60, 50, 70, 90, 80, 100],
+    week: [100, 80, 90, 70, 50, 60, 40],
     month: [200, 300, 250, 400, 350, 450, 500],
-    year: [600, 550, 500, 450, 400, 350, 300] // downward trend
+    year: [300, 328, 524, 400, 430, 517, 600] 
   };
 
   const buttons = document.querySelectorAll('.spending-range span');
@@ -433,7 +433,7 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
     const xEnd = w - marginRight;
     const stepX = (xEnd - xStart) / (values.length - 1);
     const trend = values[values.length - 1] - values[0];
-    const color = trend >= 0 ? 'green' : 'red';
+    const color = trend >= 0 ? 'red' : 'green';
 
     // Determine time unit
     let timeUnit = '';
@@ -441,7 +441,7 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
     else if (label === 'year') timeUnit = 'months';
     else timeUnit = 'hours';
 
-    // === Axes ===
+    // Axes
     ctx.strokeStyle = '#666';
     ctx.lineWidth = 1.2;
     ctx.beginPath();
@@ -450,7 +450,7 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
     ctx.lineTo(xEnd, yZero);
     ctx.stroke();
 
-    // === Y-axis Labels ===
+    // Y-axis Labels
     ctx.fillStyle = '#222';
     ctx.font = '13px Arial';
     ctx.textAlign = 'right';
@@ -468,7 +468,7 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
       ctx.stroke();
     }
 
-    // === X-axis Labels ===
+    // X-axis Labels 
     ctx.fillStyle = '#222';
     ctx.font = '13px Arial';
     ctx.textAlign = 'center';
@@ -477,7 +477,7 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
       ctx.fillText(i + 1, x + 2, yZero + 18);
     }
 
-    // === Axis Titles ===
+    // Axis Titles
     ctx.font = 'bold 14px Arial';
     ctx.fillStyle = '#111';
     ctx.fillText(`Time (${timeUnit})`, (w / 2), h - 15);
@@ -490,7 +490,7 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
     ctx.fillText('Spending ($)', 0, 0);
     ctx.restore();
 
-    // === Draw Line ===
+    // Draw Line
     ctx.beginPath();
     ctx.moveTo(xStart, yZero - (values[0] / max) * (yZero - marginTop));
     for (let i = 1; i < values.length; i++) {
@@ -516,14 +516,14 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
   draw(data.week, 'week');
 })();
 
-// === PIE CHART ===
+//Pie Chart
 (function() {
   const canvas = document.getElementById('category-pie');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const legend = document.getElementById('category-legend');
 
-  //example data
+  // Example data
   const data = {
     Groceries: 30,
     Dining: 20,
@@ -533,20 +533,40 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
   };
 
   const colors = ['#4caf50', '#ff9800', '#2196f3', '#e91e63', '#9c27b0'];
-
   const entries = Object.entries(data);
-  const total = entries.reduce((a, [, v]) => a + v, 0);
+  const total = entries.reduce((sum, [, v]) => sum + v, 0);
 
-  let start = 0;
+  const centerX = 130;
+  const centerY = 130;
+  const radius  = 100;
+
+  let startAngle = 0;
+
   entries.forEach(([label, value], i) => {
-    const angle = (value / total) * Math.PI * 2;
+    const sliceAngle = (value / total) * Math.PI * 2;
+
+    // Draw slice
     ctx.beginPath();
-    ctx.moveTo(130, 130);
-    ctx.arc(130, 130, 100, start, start + angle);
+    ctx.moveTo(centerX, centerY);
+    ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
     ctx.closePath();
     ctx.fillStyle = colors[i];
     ctx.fill();
-    start += angle;
+
+    // Draw percentage label
+    const midAngle = startAngle + sliceAngle / 2;
+    const labelX = centerX + (radius / 1.5) * Math.cos(midAngle);
+    const labelY = centerY + (radius / 1.5) * Math.sin(midAngle);
+
+    ctx.fillStyle = '#000';
+    ctx.font = '14px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const percent = ((value / total) * 100).toFixed(0) + '%';
+    ctx.fillText(percent, labelX, labelY);
+
+    startAngle += sliceAngle;
   });
 
   // Simple legend
