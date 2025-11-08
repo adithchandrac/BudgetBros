@@ -437,6 +437,7 @@ align-items: center;}
 #category-pie {
   display: block;
   margin: 0 auto;
+  transform: translateY(-10px);
 }
 
 #category-legend {
