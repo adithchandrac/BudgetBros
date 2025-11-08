@@ -206,6 +206,7 @@ if(form){
     const id = (transactions.reduce((m,t)=>Math.max(m,t.id), 0) || 0) + 1;
     transactions.push({ id, type, category, note, amount, date });
     saveTxns(transactions);
+    renderLatestTransaction();
 
     // reset quick fields
     amtEl.value = '';
@@ -217,9 +218,37 @@ if(form){
   });
 }
 
+function renderLatestTransaction() {
+  const latestEl = document.getElementById('home-latest-txn');
+  if (!latestEl) return;
+  const summary = latestEl.querySelector('.txn-summary');
+
+  if (!transactions || transactions.length === 0) {
+    summary.innerHTML = `<span>No recent transactions</span>`;
+    return;
+  }
+
+  // Find the most recent transaction by date (and id fallback)
+  const latest = [...transactions].sort((a, b) =>
+    b.date.localeCompare(a.date) || b.id - a.id
+  )[0];
+
+  const sign = latest.type === 'expense' ? '-' : '+';
+  const colorClass = latest.type === 'expense' ? 'expense' : 'income';
+  const amtText = `${sign}$${latest.amount.toFixed(2)}`;
+
+  summary.innerHTML = `
+    <span class="txn-cat">${latest.category}</span>
+    <span class="txn-amt ${colorClass}">${amtText}</span>
+    <span class="txn-date">${latest.date}</span>
+  `;
+}
+
+
 // Initial render: default to ALL in list mode
 setMode('list');
 renderTransactions('all');
+renderLatestTransaction();
 
 
 
@@ -418,7 +447,7 @@ const categories = [
 
   const data = {
     week: [100, 80, 90, 70, 50, 60, 40],
-    month: [200, 300, 250, 400, 350],
+    month: [200, 300, 250, 400],
     year: [300, 328, 524, 400, 430, 517, 600, 650, 750, 600, 750, 500] 
   };
 
