@@ -226,36 +226,44 @@ renderTransactions('all');
 const spans = document.querySelectorAll('span[id^="budget-"]');
 const overview = document.getElementById('budget-overview');
 
-  const BUDGETS = {
-    Today: {
-      Utilities: 5, Transportation: 10, "Groceries & Food": 25, Bills: 0,
-      Education: 0, Entertainment: 10, Insurance: 0, Medical: 0
-    },
-    Week: {
-      Utilities: 30, Transportation: 60, "Groceries & Food": 150, Bills: 50,
-      Education: 40, Entertainment: 60, Insurance: 25, Medical: 20
-    },
-    Month: {
-      Utilities: 120, Transportation: 250, "Groceries & Food": 600, Bills: 200,
-      Education: 150, Entertainment: 250, Insurance: 120, Medical: 100
-    },
-    Year: {
-      Utilities: 1440, Transportation: 3000, "Groceries & Food": 7200, Bills: 2400,
-      Education: 1800, Entertainment: 3000, Insurance: 1440, Medical: 1200
-    }
+/*Category list*/ 
+const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "Education", "Business",
+   "Savings", "investment","debt repayment", "Groceries", "Dining", "Shopping"
+   ,"Personal care","Entertainment","Travel","Other necessities","Miscellaneous"
+  ];
+
+  const budgets = {
+    Daily: new Array(categories.length).fill(0),
+    Weekly:  new Array(categories.length).fill(0),
+    Monthly: new Array(categories.length).fill(0),
+    Yearly:  new Array(categories.length).fill(0)
   };
 
   function renderBudget(period) {
-    const data = BUDGETS[period];
-    let ret = `<table class='budgets' ">
-                 <tr><th>Category</th><th>Cap($)</th></tr>`;
-    for (const category in data) {
-      const amount = data[category];
-      ret += `<tr><td>${category}</td><td>${amount.toFixed(2)}</td></tr>`;
+    const data = budgets[period];
+    let ret = ''
+    if(data[0] == 0){
+      ret = `
+        <div>
+          <p>No ${period} budget set yet.</p>
+          <button id="new-budget-btn" class='btn' >Create ${period} budget</button>
+        </div>
+      `;
+      document.getElementById("budget-overview").innerHTML = ret;
+      const newBdgt = document.getElementById("new-budget-btn");
+      newBdgt.addEventListener('click', () => budgetform(period));
+      return;
     }
-    ret += `</table>             <button id="edit-button" class="btn">Edit Budget</button>`;
-    overview.innerHTML = ret;
-  }
+    else{
+      let ret = `<table class='budgets'>
+                  <tr><th>Category</th><th>Cap($)</th></tr>`;
+      for (let x = 0; x < categories.length; x++) {
+        ret += `<tr><td>${categories[x]}</td><td>${data[x]}</td></tr>`;
+      }
+      ret += `</table>             <button id="edit-button" class="btn">Edit Budget</button>`;
+            document.getElementById("budget-overview").innerHTML = ret;
+      }
+  } 
 
   // Handle clicks and class toggling
   spans.forEach(span => {
@@ -267,11 +275,133 @@ const overview = document.getElementById('budget-overview');
     });
   });
 
-  const defaultBudgetSpan = document.getElementById('budget-month');
+  const defaultBudgetSpan = document.getElementById('budget-daily');
   if (defaultBudgetSpan) {
     defaultBudgetSpan.classList.add('is-active');
-    renderBudget('Month');
+    renderBudget('Daily');
   }
+
+  function budgetform(period){
+  let overview = document.getElementById("budget-overview");
+  let data = budgets[period];
+  overview.innerHTML = "";
+
+  let ret = `
+    <table class="budgets">
+      <tr><th>Category</th><th>$</th></tr>
+      <tr>
+        <td>${categories[0]}</td>
+        <td>
+          <input 
+            type="number"
+            required
+            id="spending-amnt"       
+            class="budget-input"
+            min="1"
+            step="0.01"
+            value="${data[0] ?? 0}">
+        </td>
+      </tr>
+  `;
+
+  for (let x = 1; x < categories.length; x++) {
+    ret += `
+      <tr>
+        <td>${categories[x]}</td>
+        <td>
+          <input 
+            type="number" 
+            required
+            id="${categories[x]}-amount"
+            class="budget-input"
+            min="0"
+            step="0.01"
+            value="${data[x] ?? 0}">
+        </td>
+      </tr>`;
+  }
+  ret += `</table>`;
+
+  overview.innerHTML = ret + `
+    <button id="cancel-budget" class="btn">Cancel</button>
+    <button id="automate-budget" class="btn">Sample Budget</button>
+    <button id="submit-budget" class="btn">Submit Budget</button>
+  `;
+
+  document.getElementById("cancel-budget")
+    .addEventListener("click", () => { renderBudget(period); });
+
+  document.getElementById("automate-budget").addEventListener("click", () => {
+      const limit = parseFloat(document.getElementById("spending-amnt").value);
+      if (!Number.isFinite(limit) || limit <= 1) {
+        alert("Please assign a spending limit (> 1) so we can generate a sample budget");
+        return;
+      }
+
+      // percentages aligned to your categories order
+      // index 0 is Spending Limit (1.0 is just placeholder; we won't use it)
+      const pct = [
+        1.00,   // Spending Limit (ignored below)
+        0.23,   // Bills
+        0.05,   // Insurance
+        0.08,   // Transportation
+        0.03,   // Education
+        0.01,   // Business
+        0.10,   // Savings
+        0.10,   // investment
+        0.10,   // debt repayment
+        0.12,   // Groceries
+        0.03,   // Dining
+        0.03,   // Shopping
+        0.03,   // Personal care
+        0.03,   // Entertainment
+        0.03,   // Travel
+        0.02,   // Other necessities
+        0.00    // Miscellaneous (we’ll fill remainder here)
+      ];
+
+      // set each input from limit * pct[i]
+      let allocated = 0;
+      for (let i = 1; i < categories.length - 1; i++) { // exclude Misc row here
+        const v = +(limit * pct[i]).toFixed(2);
+        allocated += v;
+        const el = document.getElementById(`${categories[i]}-amount`);
+        if (el) el.value = v.toFixed(2);
+      }
+
+      const remainder = +(limit - allocated).toFixed(2);
+      const miscEl = document.getElementById("Miscellaneous-amount");
+      if (miscEl) miscEl.value = remainder.toFixed(2);
+    });
+
+  document.getElementById("submit-budget").addEventListener("click", () => {
+      const limit = parseFloat(document.getElementById("spending-amnt").value);
+      if (!Number.isFinite(limit) || limit <= 1) {
+        alert("Spending Limit must be greater than 1.");
+        return;
+      }
+      let vals = new Array(categories.length).fill(0);
+      vals[0] = limit;
+
+      let sum = 0;
+      for (let i = 1; i < categories.length; i++) {
+        const el = document.getElementById(`${categories[i]}-amount`);
+        const v = parseFloat(el?.value);
+        vals[i] = Number.isFinite(v) ? v : 0;
+        sum += vals[i];
+      }
+
+      const eps = 0.01;
+      if (Math.abs(sum - limit) > eps) {
+        alert(`All categories must add up to the Spending Limit. Current total: $${sum.toFixed(2)} vs $${limit.toFixed(2)}.`);
+        return;
+      }
+
+      // Save to budgets and re-render
+      budgets[period] = vals;
+      renderBudget(period);
+    });
+}
 
 //Spending Graph
 (function() {
