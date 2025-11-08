@@ -152,6 +152,49 @@ input[type="date"]{
   align-content: center;
 }
 
+/* === Home: Latest Transaction Button === */
+.home-latest-txn {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-top: 16px;
+  width: 90%;
+  max-width: 360px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.home-latest-txn:hover {
+  background: var(--surface-hover);
+  transform: scale(1.01);
+}
+
+.home-latest-txn:active {
+  transform: scale(0.99);
+}
+
+.home-latest-txn .txn-label {
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.home-latest-txn .txn-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.home-latest-txn .txn-amt.expense { color: #b91c1c; }
+.home-latest-txn .txn-amt.income  { color: #166534; }
+
+
 .budgets {
   border-collapse: collapse;
   width: 89%;

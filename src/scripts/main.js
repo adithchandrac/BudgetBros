@@ -14,6 +14,8 @@
     if(tab) tab.classList.add('active');
   }
 
+  window.show = show;
+
   document.querySelector('.tabs').addEventListener('click', (e) => {
     const btn = e.target.closest('.tab');
     if(!btn) return;
@@ -243,6 +245,15 @@ function renderLatestTransaction() {
     <span class="txn-date">${latest.date}</span>
   `;
 }
+
+// Make the "latest transaction" button open the Spending tab
+const latestTxnBtn = document.getElementById('home-latest-txn');
+if (latestTxnBtn) {
+  latestTxnBtn.addEventListener('click', () => {
+    show('spending');
+  });
+}
+
 
 
 // Initial render: default to ALL in list mode
