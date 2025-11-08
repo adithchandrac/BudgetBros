@@ -451,8 +451,8 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
     ctx.stroke();
 
     // Y-axis Labels
-    ctx.fillStyle = '#222';
-    ctx.font = '13px Arial';
+    ctx.fillStyle = '#000';
+    ctx.font = '14px Arial';
     ctx.textAlign = 'right';
     const ySteps = 5;
     for (let i = 0; i <= ySteps; i++) {
@@ -469,8 +469,8 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
     }
 
     // X-axis Labels 
-    ctx.fillStyle = '#222';
-    ctx.font = '13px Arial';
+    ctx.fillStyle = '#000';
+    ctx.font = '14px Arial';
     ctx.textAlign = 'center';
     for (let i = 0; i < values.length; i++) {
       const x = xStart + i * stepX;
