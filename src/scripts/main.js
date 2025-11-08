@@ -228,8 +228,8 @@ const overview = document.getElementById('budget-overview');
 
 /*Category list*/ 
 const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "Education", "Business",
-   "Savings", "investment","debt repayment", "Groceries", "Dining", "Shopping"
-   ,"Personal care","Entertainment","Travel","Other necessities","Miscellaneous"
+   "Savings", "Investment","Debt Repayment", "Groceries", "Dining", "Shopping"
+   ,"Personal Care","Entertainment","Travel","Other Necessities","Miscellaneous"
   ];
 
   const budgets = {
@@ -297,8 +297,8 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
             required
             id="spending-amnt"       
             class="budget-input"
-            min="1"
-            step="0.01"
+            min="0"
+            step="10"
             value="${data[0] ?? 0}">
         </td>
       </tr>
@@ -325,7 +325,7 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
   overview.innerHTML = ret + `
     <button id="cancel-budget" class="btn">Cancel</button>
     <button id="automate-budget" class="btn">Sample Budget</button>
-    <button id="submit-budget" class="btn">Submit Budget</button>
+    <button id="save-budget" class="btn">Save Budget</button>
   `;
 
   document.getElementById("cancel-budget")
@@ -374,7 +374,7 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
       if (miscEl) miscEl.value = remainder.toFixed(2);
     });
 
-  document.getElementById("submit-budget").addEventListener("click", () => {
+  document.getElementById("save-budget").addEventListener("click", () => {
       const limit = parseFloat(document.getElementById("spending-amnt").value);
       if (!Number.isFinite(limit) || limit <= 1) {
         alert("Spending Limit must be greater than 1.");
@@ -411,8 +411,8 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
 
   const data = {
     week: [100, 80, 90, 70, 50, 60, 40],
-    month: [200, 300, 250, 400, 350, 450, 500],
-    year: [300, 328, 524, 400, 430, 517, 600] 
+    month: [200, 300, 250, 400, 350],
+    year: [300, 328, 524, 400, 430, 517, 600, 650, 750, 600, 750, 500] 
   };
 
   const buttons = document.querySelectorAll('.spending-range span');
@@ -437,7 +437,8 @@ const categories = [ "Spending Limit", "Bills", "Insurance", "Transportation", "
 
     // Determine time unit
     let timeUnit = '';
-    if (label === 'week' || label === 'month') timeUnit = 'days';
+    if (label === 'week') timeUnit = 'days';
+    else if (label === 'month') timeUnit = 'weeks'
     else if (label === 'year') timeUnit = 'months';
     else timeUnit = 'hours';
 
