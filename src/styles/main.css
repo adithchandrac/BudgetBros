@@ -198,7 +198,7 @@ input[type="date"]{
 .budgets {
   border-collapse: collapse;
   width: 89%;
-  max-width: 800px;
+  max-width: 900px;
   background-color: var(--bg);
   border-radius: 16px;
   overflow: hidden;
@@ -216,10 +216,18 @@ input[type="date"]{
 }
 
 .budgets td {
-  padding: 4px 8px;
+  padding: 4px 20px;
+  white-space: nowrap;
+  font-size: 20px;
   border-bottom: 1px solid #e6e9ef;
+  min-width: 800px;
   color: #333;
   min-width: 100px;
+}
+
+.budget-input{
+  width: 100px;
+  height: 50px;
 }
 
 
@@ -373,6 +381,16 @@ align-items: center;}
     padding: 16px 20px;
     min-height: 54px;
     border-radius: 14px;
+  }
+  .bdgt-btn{
+    padding: 12px 14px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent);
+      color: var(--accent-contrast);
+      font-weight: 800;
+      font-size: 16px;
+      min-height: 44px
   }
 
   /* Tabs */

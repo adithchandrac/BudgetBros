@@ -268,6 +268,7 @@ const overview = document.getElementById('budget-overview');
 
 /*Category list*/ 
 const categories = [
+  "Spending Limit",
   "Bills & Utilities",
   "Transportation",
   "Groceries",
@@ -370,9 +371,9 @@ const categories = [
   ret += `</table>`;
 
   overview.innerHTML = ret + `
-    <button id="cancel-budget" class="btn">Cancel</button>
-    <button id="automate-budget" class="btn">Sample Budget</button>
-    <button id="save-budget" class="btn">Save Budget</button>
+    <button id="cancel-budget" class="bdgt-btn">Cancel</button>
+    <button id="automate-budget" class="bdgt-btn">Sample Budget</button>
+    <button id="save-budget" class="bdgt-btn">Save Budget</button>
   `;
 
   document.getElementById("cancel-budget")
@@ -438,8 +439,7 @@ const categories = [
         sum += vals[i];
       }
 
-      const eps = 0.01;
-      if (Math.abs(sum - limit) > eps) {
+      if (Math.abs(sum - limit) > 0 || Math.abs(limit - sum)) {
         alert(`All categories must add up to the Spending Limit. Current total: $${sum.toFixed(2)} vs $${limit.toFixed(2)}.`);
         return;
       }
