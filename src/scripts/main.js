@@ -598,13 +598,13 @@ function budgetform(period) {
   const ctx = canvas.getContext("2d");
   const legend = document.getElementById("category-legend");
 
-  // Example data
+  //Example data
   const data = {
     Groceries: 30,
     Dining: 20,
-    Books: 10,
-    Coffee: 15,
-    Health: 25,
+    Entertainment: 10,
+    Transportation: 15,
+    Bills: 25,
   };
 
   const colors = ["#4caf50", "#ff9800", "#2196f3", "#e91e63", "#9c27b0"];
@@ -615,34 +615,124 @@ function budgetform(period) {
   const centerY = 130;
   const radius = 100;
 
+  let exploded = null; 
+  let hovered = null;  
+
+  //Store slice angle info for hit detection
+  const sliceInfo = [];
   let startAngle = 0;
-
-  entries.forEach(([label, value], i) => {
+  entries.forEach(([label, value]) => {
     const sliceAngle = (value / total) * Math.PI * 2;
-
-    // Draw slice
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
-    ctx.closePath();
-    ctx.fillStyle = colors[i];
-    ctx.fill();
-
-    // Draw percentage label
-    const midAngle = startAngle + sliceAngle / 2;
-    const labelX = centerX + (radius / 1.5) * Math.cos(midAngle);
-    const labelY = centerY + (radius / 1.5) * Math.sin(midAngle);
-
-    ctx.fillStyle = "#000";
-    ctx.font = "14px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    const percent = ((value / total) * 100).toFixed(0) + "%";
-    ctx.fillText(percent, labelX, labelY);
-
+    sliceInfo.push({ label, startAngle, endAngle: startAngle + sliceAngle });
     startAngle += sliceAngle;
   });
+
+  function drawPie() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let startAngle = 0;
+
+    entries.forEach(([label, value], i) => {
+      const sliceAngle = (value / total) * Math.PI * 2;
+      const midAngle = startAngle + sliceAngle / 2;
+
+      //Offset logic
+      let offset = 0;
+      if (exploded === label) offset = 15;
+      else if (hovered === label) offset = 8;
+
+      const offsetX = Math.cos(midAngle) * offset;
+      const offsetY = Math.sin(midAngle) * offset;
+
+      //Fade non-selected slices
+      ctx.globalAlpha = exploded && exploded !== label ? 0.25 : 1;
+
+      //Draw slice
+      ctx.beginPath();
+      ctx.moveTo(centerX + offsetX, centerY + offsetY);
+      ctx.arc(
+        centerX + offsetX,
+        centerY + offsetY,
+        radius,
+        startAngle,
+        startAngle + sliceAngle
+      );
+      ctx.closePath();
+      ctx.fillStyle = colors[i];
+      ctx.fill();
+
+      //Draw percentage label
+      if (!exploded || exploded === label) {
+        const labelX = centerX + offsetX + (radius / 1.5) * Math.cos(midAngle);
+        const labelY = centerY + offsetY + (radius / 1.5) * Math.sin(midAngle);
+        ctx.fillStyle = "#000";
+        ctx.font = "14px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        const percent = ((value / total) * 100).toFixed(0) + "%";
+        ctx.fillText(percent, labelX, labelY);
+      }
+
+      startAngle += sliceAngle;
+    });
+
+    ctx.globalAlpha = 1;
+
+    //Show selected slice info in center
+    if (exploded) {
+      const value = data[exploded];
+      ctx.fillStyle = "#000";
+      ctx.font = "bold 16px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(`${exploded}: $${value}`, centerX, centerY);
+    }
+  }
+
+  function getSliceAtMouse(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left - centerX;
+    const y = e.clientY - rect.top - centerY;
+    const dist = Math.sqrt(x * x + y * y);
+    if (dist > radius) return null;
+
+    const angle = Math.atan2(y, x);
+    const normAngle = angle >= 0 ? angle : angle + 2 * Math.PI;
+    return sliceInfo.find(
+      (s) => normAngle >= s.startAngle && normAngle < s.endAngle
+    )?.label;
+  }
+
+  //Click to explode (trigger pie chart to pop out and show category)
+  canvas.addEventListener("click", (e) => {
+    const slice = getSliceAtMouse(e);
+    exploded = exploded === slice ? null : slice;
+    drawPie();
+  });
+
+  //Hover lift effect
+  canvas.addEventListener("mousemove", (e) => {
+    const slice = getSliceAtMouse(e);
+    if (slice !== hovered) {
+      hovered = slice;
+      drawPie();
+    }
+  });
+
+  canvas.addEventListener("mouseleave", () => {
+    hovered = null;
+    drawPie();
+  });
+
+  //Legend
+  legend.innerHTML = entries
+    .map(
+      ([label, _], i) =>
+        `<li><span style="background:${colors[i]}"></span>${label}</li>`
+    )
+    .join("");
+
+  drawPie();
+})();
 
   //Profile avatar selector
   (() => {
