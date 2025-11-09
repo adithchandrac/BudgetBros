@@ -132,93 +132,89 @@
             <div class="content">
             <!-- Placeholders -->
             <div class="graph-placeholder" aria-label="Category breakdown">
-               <div class="spending-pie-title">
-                  <h2 class="spending-pie-header">Spending Breakdown</h2>
-                  <canvas id="category-pie" width="260" height="260"></canvas>
-                  <ul id="category-legend"></ul>
-               </div>
-               <div class="spending-graph-title">
-                  <h2 class="spending-graph-header">Spending Trends Overtime</h2>
-                  <div class="spending-meta">
-                     <div class="spending-range">
-                        <span data-range="week" class="is-active">Week</span>
-                        <span data-range="month">Month</span>
-                        <span data-range="year">Year</span>
-                     </div>
-                  </div>
-                  <!--legend-->
-                  <ul class="trend-legend">
-                     <li><span class="trend-up"></span> Spending Decrease (Good)</li>
-                     <li><span class="trend-down"></span> Spending Increase (Bad)</li>
-                  </ul>
-                  <div class="spending-graph-wrap">
-                     <canvas id="spending-graph" width="450" height="180"></canvas>
+            <div class="spending-pie-title">
+               <h2 class="spending-pie-header">Spending Breakdown</h2>
+               <canvas id="category-pie" width="260" height="260"></canvas>
+               <ul id="category-legend"></ul>
+            </div>
+            <div class="spending-graph-title">
+               <h2 class="spending-graph-header">Spending Trends Overtime</h2>
+               <div class="spending-meta">
+                  <div class="spending-range">
+                     <span data-range="week" class="is-active">Week</span>
+                     <span data-range="month">Month</span>
+                     <span data-range="year">Year</span>
                   </div>
                </div>
+               <!--legend-->
+               <ul class="trend-legend">
+                  <li><span class="trend-up"></span> Spending Decrease (Good)</li>
+                  <li><span class="trend-down"></span> Spending Increase (Bad)</li>
+               </ul>
+               <div class="spending-graph-wrap">
+                  <canvas id="spending-graph" width="450" height="180"></canvas>
+               </div>
+            </div>
          </section>
          <!-- PROFILE tab -->
          <section id="panel-profile" class="panel">
-         <header class="header">
-         <h1>Profile</h1>
-         </header>
-         <div class="profile-content">
-         <div>
-         <div class="pfp-wrap">
-         <img id="profile-avatar" class="pfp-icon" src="./assets/icons/pfp.png" alt="Profile picture" />
-         <button id="pfp-edit" class="pfp-edit" type="button" aria-label="Edit profile picture">
-         <img src="./assets/icons/pencil.png" alt="" aria-hidden="true" onerror="this.replaceWith(document.createTextNode('✎'))">
-         </button>
-         <div id="avatar-popover" class="avatar-popover" hidden role="dialog" aria-label="Choose an avatar">
-         <button type="button" class="avatar-opt" data-avatar="crab.png"      aria-label="Crab"><img src="./assets/icons/crab.png"      alt=""></button>
-         <button type="button" class="avatar-opt" data-avatar="jellyfish.png" aria-label="Jellyfish"><img src="./assets/icons/jellyfish.png" alt=""></button>
-         <button type="button" class="avatar-opt" data-avatar="fox.png"       aria-label="Fox"><img src="./assets/icons/fox.png"       alt=""></button>
-         <button type="button" class="avatar-opt" data-avatar="koala.png"     aria-label="Koala"><img src="./assets/icons/koala.png"     alt=""></button>
-         </div>
-         </div>
-         </div>
-         <h1>Account & Preferences</h1>
-<table class="budgets" id="profile-form">
-  <tr>
-    <td>Name:</td>
-    <td><input id="pf-name" class="input" type="text" disabled></td>
-  </tr>
-  <tr>
-    <td>Yearly Income:</td>
-    <td><input id="pf-income" class="input" type="number" step="100" min="0" disabled></td>
-  </tr>
-
-  <!-- NEW FIELDS -->
-  <tr>
-    <td>Email:</td>
-    <td><input id="pf-email" class="input" type="email" disabled></td>
-  </tr>
-  <tr>
-    <td>Phone:</td>
-    <td><input id="pf-phone" class="input" type="tel" disabled></td>
-  </tr>
-  <tr>
-    <td>City:</td>
-    <td><input id="pf-city" class="input" type="text" disabled></td>
-  </tr>
-  <tr>
-    <td>Preferred Currency:</td>
-    <td>
-      <select id="pf-currency" class="input" disabled>
-        <option value="USD">$ USD</option>
-        <option value="EUR">€ EUR</option>
-        <option value="GBP">£ GBP</option>
-        <option value="INR">₹ INR</option>
-      </select>
-    </td>
-  </tr>
-</table>
-
-<!-- One of these is visible at a time -->
-<div class="profile-actions">
-  <button id="pf-save"  class="btn" hidden>Save</button>
-  <button id="pf-edit"  class="btn">Edit</button>
-</div>
-
+            <header class="header">
+               <h1>Profile</h1>
+            </header>
+            <div class="profile-content">
+               <div>
+                  <div class="pfp-wrap">
+                     <img id="profile-avatar" class="pfp-icon" src="./assets/icons/pfp.png" alt="Profile picture" />
+                     <button id="pfp-edit" class="pfp-edit" type="button" aria-label="Edit profile picture">
+                     <img src="./assets/icons/pencil.png" alt="" aria-hidden="true" onerror="this.replaceWith(document.createTextNode('✎'))">
+                     </button>
+                     <div id="avatar-popover" class="avatar-popover" hidden role="dialog" aria-label="Choose an avatar">
+                        <button type="button" class="avatar-opt" data-avatar="crab.png"      aria-label="Crab"><img src="./assets/icons/crab.png"      alt=""></button>
+                        <button type="button" class="avatar-opt" data-avatar="jellyfish.png" aria-label="Jellyfish"><img src="./assets/icons/jellyfish.png" alt=""></button>
+                        <button type="button" class="avatar-opt" data-avatar="fox.png"       aria-label="Fox"><img src="./assets/icons/fox.png"       alt=""></button>
+                        <button type="button" class="avatar-opt" data-avatar="koala.png"     aria-label="Koala"><img src="./assets/icons/koala.png"     alt=""></button>
+                     </div>
+                  </div>
+               </div>
+               <h1>Account & Preferences</h1>
+               <table class="budgets" id="profile-form">
+                  <tr>
+                     <td>Name:</td>
+                     <td><input id="pf-name" class="input" type="text" disabled></td>
+                  </tr>
+                  <tr>
+                     <td>Yearly Income:</td>
+                     <td><input id="pf-income" class="input" type="number" step="100" min="0" disabled></td>
+                  </tr>
+                  <tr>
+                     <td>Email:</td>
+                     <td><input id="pf-email" class="input" type="email" disabled></td>
+                  </tr>
+                  <tr>
+                     <td>Phone:</td>
+                     <td><input id="pf-phone" class="input" type="tel" disabled></td>
+                  </tr>
+                  <tr>
+                     <td>City:</td>
+                     <td><input id="pf-city" class="input" type="text" disabled></td>
+                  </tr>
+                  <tr>
+                     <td>Preferred Currency:</td>
+                     <td>
+                        <select id="pf-currency" class="input" disabled>
+                           <option value="USD">$ USD</option>
+                           <option value="EUR">€ EUR</option>
+                           <option value="GBP">£ GBP</option>
+                           <option value="INR">₹ INR</option>
+                        </select>
+                     </td>
+                  </tr>
+               </table>
+               <!-- One of these is visible at a time -->
+               <div class="profile-actions">
+                  <button id="pf-save"  class="btn" hidden>Save</button>
+                  <button id="pf-edit"  class="btn">Edit</button>
+               </div>
          </section>
          </div>
          <!-- bottom nav -->
