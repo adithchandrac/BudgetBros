@@ -715,4 +715,81 @@ function budgetform(period) {
       if (e.key === "Escape") close();
     });
   })();
+  (() => {
+  const PROFILE_KEY = "cmsc434.profile.v1";
+
+  // inputs
+  const fields = {
+    name:     document.getElementById("pf-name"),
+    income:   document.getElementById("pf-income"),
+    email:    document.getElementById("pf-email"),
+    phone:    document.getElementById("pf-phone"),
+    city:     document.getElementById("pf-city"),
+    currency: document.getElementById("pf-currency"),
+  };
+
+  const btnSave = document.getElementById("pf-save");
+  const btnEdit = document.getElementById("pf-edit");
+
+  if (!btnSave || !btnEdit || Object.values(fields).some(el => !el)) return;
+
+  const loadProfile = () => {
+    try {
+      const raw = localStorage.getItem(PROFILE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  };
+
+  const saveProfile = (data) => {
+    try { localStorage.setItem(PROFILE_KEY, JSON.stringify(data)); } catch {}
+  };
+
+  const setDisabled = (isDisabled) => {
+    Object.values(fields).forEach(el => el.disabled = isDisabled);
+  };
+
+  const setMode = (mode) => {
+    // mode: 'view' or 'edit'
+    const view = mode === "view";
+    setDisabled(view);
+    btnEdit.hidden = !view;   // show Edit only in view
+    btnSave.hidden = view;    // show Save only in edit
+  };
+
+  const apply = (data) => {
+    fields.name.value     = data?.name ?? "";
+    fields.income.value   = data?.income ?? "";
+    fields.email.value    = data?.email ?? "";
+    fields.phone.value    = data?.phone ?? "";
+    fields.city.value     = data?.city ?? "";
+    fields.currency.value = data?.currency ?? "USD";
+  };
+
+  // init
+  const existing = loadProfile();
+  apply(existing);
+
+  // if we have nothing saved yet -> start in EDIT with Save visible
+  const nothingSaved =
+    !existing ||
+    Object.values(existing).every(v => v === "" || v === null || typeof v === "undefined");
+
+  setMode(nothingSaved ? "edit" : "view");
+
+  // wire buttons
+  btnEdit.addEventListener("click", () => setMode("edit"));
+
+  btnSave.addEventListener("click", () => {
+    const data = {
+      name:     fields.name.value.trim(),
+      income:   fields.income.value ? Number(fields.income.value) : "",
+      email:    fields.email.value.trim(),
+      phone:    fields.phone.value.trim(),
+      city:     fields.city.value.trim(),
+      currency: fields.currency.value || "USD",
+    };
+    saveProfile(data);
+    setMode("view");
+  });
+})();
 })();

@@ -177,17 +177,48 @@
          </div>
          </div>
          <h1>Account & Preferences</h1>
-         <table class="budgets">
-         <tr>
-         <td>Yearly Income:</td>
-         <td><input class="input" type="number" step="100"></td>
-         </tr>
-         <tr>
-         <td>Name:</td>
-         <td><input class="input" type="text"></td>
-         </tr>
-         </table>
-         </div>
+<table class="budgets" id="profile-form">
+  <tr>
+    <td>Name:</td>
+    <td><input id="pf-name" class="input" type="text" disabled></td>
+  </tr>
+  <tr>
+    <td>Yearly Income:</td>
+    <td><input id="pf-income" class="input" type="number" step="100" min="0" disabled></td>
+  </tr>
+
+  <!-- NEW FIELDS -->
+  <tr>
+    <td>Email:</td>
+    <td><input id="pf-email" class="input" type="email" disabled></td>
+  </tr>
+  <tr>
+    <td>Phone:</td>
+    <td><input id="pf-phone" class="input" type="tel" disabled></td>
+  </tr>
+  <tr>
+    <td>City:</td>
+    <td><input id="pf-city" class="input" type="text" disabled></td>
+  </tr>
+  <tr>
+    <td>Preferred Currency:</td>
+    <td>
+      <select id="pf-currency" class="input" disabled>
+        <option value="USD">$ USD</option>
+        <option value="EUR">€ EUR</option>
+        <option value="GBP">£ GBP</option>
+        <option value="INR">₹ INR</option>
+      </select>
+    </td>
+  </tr>
+</table>
+
+<!-- One of these is visible at a time -->
+<div class="profile-actions">
+  <button id="pf-save"  class="btn" hidden>Save</button>
+  <button id="pf-edit"  class="btn">Edit</button>
+</div>
+
          </section>
          </div>
          <!-- bottom nav -->
