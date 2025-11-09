@@ -831,6 +831,15 @@ input[type="date"] {
   margin-top: 16px;
 }
 
+#category-pie {
+  cursor: pointer;
+}
+
+#category-pie {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
 /* === Trend Legend === */
 .trend-legend {
   display: flex;
