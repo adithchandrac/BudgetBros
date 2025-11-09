@@ -504,7 +504,11 @@ input[type="date"] {
 .pfp-icon {
   height: 180px;
   width: 180px;
+  border-radius: 50%;
+  object-fit: contain !important;
+  background: #fff;
 }
+
 
 /* =========================================
    Tablet / iPad typography (frame stays 640x960)
@@ -863,3 +867,62 @@ input[type="date"] {
 .visually-hidden {
   display: none;
 }
+.pfp-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.pfp-edit {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+}
+.pfp-edit img { width: 18px; height: 18px; }
+
+.avatar-popover[hidden] { display: none !important; }
+.avatar-popover {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -8px;
+  translate: 0 100%;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+}
+
+.avatar-opt {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 6px;
+  background: #fff;
+  cursor: pointer;
+  object-fit: contain !important;
+  transform: scale(0.5); transform-origin: 50% 50%;
+
+
+}
+.avatar-opt:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.avatar-opt img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.avatar-opt:hover { background: var(--surface); }
+
