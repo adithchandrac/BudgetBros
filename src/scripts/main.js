@@ -882,4 +882,3 @@ function budgetform(period) {
     setMode("view");
   });
 })();
-})();
