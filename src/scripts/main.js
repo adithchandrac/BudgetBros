@@ -882,3 +882,214 @@ function budgetform(period) {
     setMode("view");
   });
 })();
+
+
+
+//  ON-SCREEN KEYBOARD 
+(function() {
+  let activeInput = null;
+  let keyboardVisible = false;
+
+  // keyboard HTML
+  const keyboardHTML = `
+    <div id="on-screen-keyboard" class="keyboard" hidden>
+      <div class="keyboard-content">
+        <!-- Single unified keyboard -->
+        <div class="keyboard-layout keyboard-unified">
+          <div class="keyboard-row">
+            <button class="key" data-key="1">1</button>
+            <button class="key" data-key="2">2</button>
+            <button class="key" data-key="3">3</button>
+            <button class="key" data-key="4">4</button>
+            <button class="key" data-key="5">5</button>
+            <button class="key" data-key="6">6</button>
+            <button class="key" data-key="7">7</button>
+            <button class="key" data-key="8">8</button>
+            <button class="key" data-key="9">9</button>
+            <button class="key" data-key="0">0</button>
+          </div>
+          <div class="keyboard-row">
+            <button class="key" data-key="q">Q</button>
+            <button class="key" data-key="w">W</button>
+            <button class="key" data-key="e">E</button>
+            <button class="key" data-key="r">R</button>
+            <button class="key" data-key="t">T</button>
+            <button class="key" data-key="y">Y</button>
+            <button class="key" data-key="u">U</button>
+            <button class="key" data-key="i">I</button>
+            <button class="key" data-key="o">O</button>
+            <button class="key" data-key="p">P</button>
+          </div>
+          <div class="keyboard-row">
+            <button class="key" data-key="a">A</button>
+            <button class="key" data-key="s">S</button>
+            <button class="key" data-key="d">D</button>
+            <button class="key" data-key="f">F</button>
+            <button class="key" data-key="g">G</button>
+            <button class="key" data-key="h">H</button>
+            <button class="key" data-key="j">J</button>
+            <button class="key" data-key="k">K</button>
+            <button class="key" data-key="l">L</button>
+          </div>
+          <div class="keyboard-row">
+            <button class="key" data-key="z">Z</button>
+            <button class="key" data-key="x">X</button>
+            <button class="key" data-key="c">C</button>
+            <button class="key" data-key="v">V</button>
+            <button class="key" data-key="b">B</button>
+            <button class="key" data-key="n">N</button>
+            <button class="key" data-key="m">M</button>
+            <button class="key key-backspace" data-action="backspace">⌫</button>
+          </div>
+          <div class="keyboard-row">
+            <button class="key key-space" data-key=" ">Space</button>
+            <button class="key" data-key=".">.</button>
+            <button class="key" data-key="@">@</button>
+            <button class="key key-done" data-action="done">Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Insert keyboard into DOM
+  document.body.insertAdjacentHTML('beforeend', keyboardHTML);
+  const keyboard = document.getElementById('on-screen-keyboard');
+
+  function showKeyboard(input) {
+    activeInput = input;
+    keyboardVisible = true;
+    
+    keyboard.hidden = false;
+    
+    // scroll in put into view
+    setTimeout(() => {
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+
+  function hideKeyboard() {
+    keyboard.hidden = true;
+    keyboardVisible = false;
+    activeInput = null;
+  }
+
+  // Handle key press
+  function handleKey(key) {
+    if (!activeInput) return;
+
+    const inputType = activeInput.type;
+    const currentValue = activeInput.value;
+    const selectionStart = activeInput.selectionStart || currentValue.length;
+    
+    if (inputType === 'number') {
+      // Only allow numbers and one decimal point
+      if (key === '.' && currentValue.includes('.')) return;
+      if (!/[0-9.]/.test(key)) return;
+    }
+
+    const newValue = currentValue.slice(0, selectionStart) + key + currentValue.slice(selectionStart);
+    activeInput.value = newValue;
+    
+    // Trigger input event for any listeners
+    activeInput.dispatchEvent(new Event('input', { bubbles: true }));
+    
+    // Move cursor forward
+    const newPos = selectionStart + 1;
+    activeInput.setSelectionRange(newPos, newPos);
+  }
+
+  function handleBackspace() {
+    if (!activeInput) return;
+    
+    const currentValue = activeInput.value;
+    const selectionStart = activeInput.selectionStart || currentValue.length;
+    
+    if (selectionStart === 0) return;
+    
+    const newValue = currentValue.slice(0, selectionStart - 1) + currentValue.slice(selectionStart);
+    activeInput.value = newValue;
+    
+    activeInput.dispatchEvent(new Event('input', { bubbles: true }));
+    
+    const newPos = selectionStart - 1;
+    activeInput.setSelectionRange(newPos, newPos);
+  }
+
+  keyboard.addEventListener('click', (e) => {
+    const btn = e.target.closest('.key');
+    if (!btn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const key = btn.dataset.key;
+    const action = btn.dataset.action;
+
+    if (action === 'backspace') {
+      handleBackspace();
+    } else if (action === 'done') {
+      hideKeyboard();
+      if (activeInput) activeInput.blur();
+    } else if (key) {
+      handleKey(key);
+    }
+  });
+
+  // Attach to all relevant inputs
+  function attachKeyboard() {
+    const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], input[type="tel"]');
+    
+    inputs.forEach(input => {
+      // Skip if already attached
+      if (input.dataset.keyboardAttached === 'true') return;
+      input.dataset.keyboardAttached = 'true';
+      
+      // Show keyboard on focus/click
+      const showHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        showKeyboard(input);
+      };
+      
+      input.addEventListener('focus', showHandler);
+      input.addEventListener('click', showHandler);
+      input.addEventListener('touchstart', showHandler, { passive: false });
+    });
+  }
+
+  // Initial attach
+  setTimeout(() => {
+    attachKeyboard();
+  }, 500);
+
+  // Reattach when new inputs are added
+  const observer = new MutationObserver(() => {
+    attachKeyboard();
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  // Hide keyboard when clicked outside
+  document.addEventListener('click', (e) => {
+    if (!keyboardVisible) return;
+    if (keyboard.contains(e.target)) return;
+    if (e.target.matches('input[type="text"], input[type="number"], input[type="email"], input[type="tel"]')) return;
+    
+    hideKeyboard();
+  });
+
+  // Prevent the keyboard from closing when clicking on it
+  keyboard.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+  });
+
+  keyboard.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+  }, { passive: false });
+
+  // Make functions available globally if needed
+  window.onScreenKeyboard = {
+    show: showKeyboard,
+    hide: hideKeyboard
+  };
+})();

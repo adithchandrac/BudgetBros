@@ -972,3 +972,161 @@ input[type="date"] {
   padding-top: 8px;   
   border-top: 1px solid var(--line); 
 }
+
+/* ====== ON-SCREEN KEYBOARD STYLES ====== */
+
+.keyboard {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--w); /* Match your phone frame width */
+  background: #f1f5f9;
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.keyboard[hidden] {
+  display: none;
+}
+
+.keyboard-content {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.keyboard-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.key {
+  appearance: none;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 14px 18px;
+  cursor: pointer;
+  min-width: 48px;
+  min-height: 52px;
+  transition: all 0.1s ease;
+  flex: 1;
+  max-width: 60px;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.key:active {
+  background: #e2e8f0;
+  transform: scale(0.95);
+}
+
+.key:hover {
+  background: #f8fafc;
+  border-color: var(--accent);
+}
+
+/* Special keys */
+.key-backspace {
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: 22px;
+  flex:1.5;
+}
+
+.key-backspace:active {
+  background: #fecaca;
+}
+
+.key-switch {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-weight: 700;
+}
+
+.key-switch:active {
+  background: #bae6fd;
+}
+
+.key-done {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 700;
+  flex: 2 !important;
+  max-width: 100px !important;
+}
+
+.key-done:active {
+  background: #0847cc;
+}
+
+.key-space {
+  flex: 4 !important;
+  max-width: 200px !important;
+}
+
+/* Numeric layout adjustments */
+.keyboard-numeric .keyboard-row {
+  justify-content: center;
+}
+
+.keyboard-numeric .key {
+  max-width: 80px;
+  font-size: 22px;
+}
+
+/* Unified layout (has both numbers and letters) */
+.keyboard-unified .key {
+  max-width: 50px;
+  font-size: 16px;
+  padding: 12px 8px;
+}
+
+/* Tablet optimizations */
+@media (min-width: 768px) {
+  .keyboard {
+    padding: 16px;
+  }
+  
+  .keyboard-layout {
+    gap: 10px;
+  }
+  
+  .keyboard-row {
+    gap: 8px;
+  }
+  
+  .key {
+    font-size: 20px;
+    padding: 16px 20px;
+    min-height: 58px;
+    border-radius: 10px;
+  }
+  
+  .keyboard-numeric .key {
+    max-width: 90px;
+    font-size: 24px;
+  }
+  
+  .keyboard-unified .key {
+    max-width: 54px;
+    font-size: 18px;
+    padding: 14px 10px;
+  }
+}
