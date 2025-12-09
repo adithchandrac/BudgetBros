@@ -67,63 +67,61 @@
                </div>
             </div>
          </section>
-         <!-- SPENDING tab -->
-         <section id="panel-spending" class="panel">
-            <header class="header">
-               <h1>Spending</h1>
-            </header>
-            <div class="content scroll">
-            <div class="txn-toolbar">
-               <h2 class="txn-title">Transactions</h2>
-               <div class="seg" id="txn-filter-seg">
-                  <button class="seg-btn is-selected" type="button" data-filter="all" aria-pressed="true">All</button>
-                  <button class="seg-btn" type="button" data-filter="expense" aria-pressed="false">Expenses</button>
-                  <button class="seg-btn" type="button" data-filter="income" aria-pressed="false">Income</button>
-               </div>
-            </div>
-            <div class="txn-add-row" style="margin:6px 0 12px;">
-               <button id="txn-open-form" class="btn" type="button" aria-label="Add transaction">Add Transaction</button>
-            </div>
-            <!-- Recent transactions list -->
-            <div id="txn-list" class="txn-list" role="list" aria-label="Recent transactions"></div>
-            <div id="add-form-wrap" hidden>
-               <form id="txn-form" class="txn-form" autocomplete="off">
-                  <div class="row">
-                     <label class="visually-hidden" for="txn-type">Type</label>
-                     <select id="txn-type" required>
-                        <option value="expense">Expense</option>
-                        <option value="income">Income</option>
-                     </select>
-                     <label class="visually-hidden" for="txn-amount">Amount</label>
-                     <input id="txn-amount" type="number" step=".01" min="0" placeholder="Amount" required />
-                  </div>
-                  <div class="row">
-                     <label class="visually-hidden" for="txn-category">Category</label>
-                     <select id="category" name="category" required>
-                        <option value="">  Choose a category  </option>
-                        <option value="Bills & Utilities">Bills & Utilities</option>
-                        <option value="Dining & Entertainment">Dining & Entertainment</option>
-                        <option value="Education & Business">Education & Business</option>
-                        <option value="Groceries">Groceries</option>
-                        <option value="Savings & investment">Savings & investment</option>
-                        <option value="Shopping & Personal Care">Shopping & Personal Care</option>
-                        <option value="Transportation">Transportation</option>
-                        <option value="Miscellaneous">Miscellaneous</option>
-                     </select>
-                     <label class="visually-hidden" for="txn-date">Date</label>
-                     <input id="txn-date" type="date" required />
-                  </div>
-                  <div class="row">
-                     <label class="visually-hidden" for="txn-note">Note</label>
-                     <input id="txn-note" type="text" placeholder="Note (optional)" />
-                     <div style="display:flex; gap:8px;">
-                        <button id="txn-add" class="btn" type="submit">Add</button>
-                        <button id="txn-cancel" class="btn btn-ghost" type="button">Cancel</button>
-                     </div>
-                  </div>
-               </form>
-            </div>
-         </section>
+<!-- SPENDING / ACTIVITY tab -->
+<section id="panel-spending" class="panel">
+  <header class="header">
+    <!-- renamed from "Spending" to "Activity" to reflect expenses + income -->
+    <h1>Activity</h1>
+  </header>
+  <div class="content scroll">
+    <div class="txn-toolbar">
+      <!-- clearer title than just "Transactions" -->
+      <h2 class="txn-title">Spending & Income</h2>
+      <div class="seg" id="txn-filter-seg">
+        <button class="seg-btn is-selected" type="button" data-filter="all" aria-pressed="true">All</button>
+        <button class="seg-btn" type="button" data-filter="expense" aria-pressed="false">Expenses</button>
+        <button class="seg-btn" type="button" data-filter="income" aria-pressed="false">Income</button>
+      </div>
+    </div>
+
+    <!-- NEW: scalable filters / sorting row -->
+    <div class="txn-subtoolbar">
+      <div class="txn-filter-group">
+        <label for="txn-filter-category">Category</label>
+        <select id="txn-filter-category">
+          <option value="all">All categories</option>
+        </select>
+      </div>
+
+      <div class="txn-filter-group">
+        <label for="txn-filter-date">Date</label>
+        <select id="txn-filter-date">
+          <option value="all">All time</option>
+          <option value="last7">Last 7 days</option>
+          <option value="last30">Last 30 days</option>
+        </select>
+      </div>
+
+      <div class="txn-filter-group">
+        <label for="txn-sort">Sort</label>
+        <select id="txn-sort">
+          <option value="date-desc">Date (newest)</option>
+          <option value="date-asc">Date (oldest)</option>
+          <option value="amount-desc">Amount (high → low)</option>
+          <option value="amount-asc">Amount (low → high)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="txn-add-row" style="margin:6px 0 12px;">
+      <button id="txn-open-form" class="btn" type="button" aria-label="Add transaction">Add Transaction</button>
+    </div>
+
+    <!-- Recent transactions list -->
+    <div id="txn-list" class="txn-list" role="list" aria-label="Recent transactions"></div>
+  </div>
+</section>
+
          <!-- ANALYTICS tab -->
          <section id="panel-analytics" class="panel">
             <header class="header">
@@ -227,9 +225,9 @@
             <img class="icon" src="./assets/icons/money-bag.png" alt="">
             <span>Budget</span>
             </button>
-            <button data-tab="spending" class="tab" aria-label="Spending">
+            <button data-tab="spending" class="tab" aria-label="Activity">
             <img class="icon" src="./assets/icons/earnings.png" alt="">
-            <span>Spending</span>
+            <span>Activity</span>
             </button>
             <button data-tab="analytics" class="tab" aria-label="Analytics">
             <img class="icon" src="./assets/icons/data-analytics.png" alt="">
@@ -249,5 +247,68 @@
          </div>
       </div>
       <script src="./scripts/main.js" defer></script>
+      <!-- Add Transaction modal dialog -->
+<div id="add-form-wrap" class="txn-modal" hidden role="dialog" aria-modal="true" aria-labelledby="txn-modal-title">
+  <div class="txn-modal-backdrop"></div>
+  <div class="txn-modal-box">
+    <div class="txn-modal-header">
+      <h2 id="txn-modal-title">Add Transaction</h2>
+      <button id="txn-modal-close" class="txn-modal-close" type="button" aria-label="Close add transaction dialog">
+        &times;
+      </button>
+    </div>
+    <form id="txn-form" class="txn-form" autocomplete="off">
+      <div class="row">
+        <label class="visually-hidden" for="txn-type">Type</label>
+        <select id="txn-type" required>
+          <option value="expense">Expense</option>
+          <option value="income">Income</option>
+        </select>
+        <label class="visually-hidden" for="txn-amount">Amount</label>
+        <input id="txn-amount" type="number" step=".01" min="0" placeholder="Amount" required />
+      </div>
+      <div class="row">
+        <label class="visually-hidden" for="category">Category</label>
+        <select id="category" name="category" required>
+          <option value="">Choose a category</option>
+          <!-- clarified Housing vs Bills & Utilities, and added a generic catch-all -->
+          <option value="Housing & Utilities">Housing & Utilities</option>
+          <option value="Dining & Entertainment">Dining & Entertainment</option>
+          <option value="Education & Business">Education & Business</option>
+          <option value="Groceries">Groceries</option>
+          <option value="Savings & investment">Savings & investment</option>
+          <option value="Shopping & Personal Care">Shopping & Personal Care</option>
+          <option value="Transportation">Transportation</option>
+          <option value="Miscellaneous">Miscellaneous</option>
+        </select>
+        <label class="visually-hidden" for="txn-date">Date</label>
+        <input id="txn-date" type="date" required />
+      </div>
+
+      <div class="row">
+        <label class="visually-hidden" for="txn-note">Note</label>
+        <input id="txn-note" type="text" placeholder="Note (optional)" />
+        <div style="display:flex; gap:8px;">
+          <button id="txn-add" class="btn" type="submit">Add</button>
+          <button id="txn-cancel" class="btn btn-ghost" type="button">Cancel</button>
+        </div>
+      </div>
+
+      <!-- NEW: basic recurring transaction support -->
+      <div class="txn-recurring-row">
+        <label>
+          <input id="txn-recurring" type="checkbox" />
+          Repeat this transaction
+        </label>
+        <select id="txn-frequency" disabled>
+          <option value="weekly">Weekly</option>
+          <option value="biweekly">Every 2 weeks</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </div>
+    </form>
+  </div>
+</div>
+
    </body>
 </html>

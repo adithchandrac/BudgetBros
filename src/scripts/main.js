@@ -35,8 +35,10 @@
     closeNotice.addEventListener("click", () => (notice.hidden = true));
 })();
 
-// ====== Spending: graph placeholder + transactions + filter + add/remove (localStorage) ======
+// ====== Spending: transactions + filter/sort + recurring + delete-confirm (localStorage) ======
 const STORAGE_KEY = "cmsc434.transactions.v3";
+const RECUR_KEY   = "cmsc434.transactions.recurring.v1";
+
 function loadTxns() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -53,56 +55,157 @@ function saveTxns(arr) {
   } catch (e) {}
 }
 
-// Seed (no emojis)
-let transactions = loadTxns() || [
-  {
-    id: 1,
-    type: "expense",
-    category: "Groceries",
-    note: "Trader Joes",
-    amount: 54.18,
-    date: "2025-10-17",
-  },
-  {
-    id: 2,
-    type: "expense",
-    category: "Transportation",
-    note: "Metro card",
-    amount: 25.0,
-    date: "2025-10-18",
-  },
-  {
-    id: 3,
-    type: "income",
-    category: "Paycheck",
-    note: "Campus job",
-    amount: 320.0,
-    date: "2025-10-18",
-  },
-];
-saveTxns(transactions);
+function loadRecurring() {
+  try {
+    const raw = localStorage.getItem(RECUR_KEY);
+    if (!raw) return null;
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : null;
+  } catch (e) {
+    return null;
+  }
+}
+function saveRecurring(arr) {
+  try {
+    localStorage.setItem(RECUR_KEY, JSON.stringify(arr));
+  } catch (e) {}
+}
+
+// date helpers for recurring + filters
+function parseISO(str) {
+  const [y, m, d] = str.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+function formatDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+function addInterval(date, freq) {
+  const d = new Date(date.getTime());
+  if (freq === "weekly") d.setDate(d.getDate() + 7);
+  else if (freq === "biweekly") d.setDate(d.getDate() + 14);
+  else if (freq === "monthly") d.setMonth(d.getMonth() + 1);
+  else return null;
+  return d;
+}
+
+// Seed transactions if none saved
+let transactions = loadTxns();
+if (!transactions) {
+  transactions = [
+    {
+      id: 1,
+      type: "expense",
+      category: "Groceries",
+      note: "Trader Joes",
+      amount: 54.18,
+      date: "2025-10-17",
+    },
+    {
+      id: 2,
+      type: "expense",
+      category: "Transportation",
+      note: "Metro card",
+      amount: 25.0,
+      date: "2025-10-18",
+    },
+    {
+      id: 3,
+      type: "income",
+      category: "Paycheck",
+      note: "Campus job",
+      amount: 320.0,
+      date: "2025-10-18",
+    },
+  ];
+  saveTxns(transactions);
+}
+
+function applyRecurring() {
+  const recs = loadRecurring();
+  if (!recs || !recs.length) return;
+
+  const today = new Date();
+  let changed = false;
+
+  for (const rec of recs) {
+    if (!rec.frequency || !rec.lastDate || !rec.template) continue;
+
+    let last = parseISO(rec.lastDate);
+    while (true) {
+      const next = addInterval(last, rec.frequency);
+      if (!next || next > today) break;
+
+      const dateStr = formatDate(next);
+      const exists = transactions.some(
+        (t) =>
+          t.recurringId === rec.id &&
+          t.date === dateStr &&
+          t.amount === rec.template.amount &&
+          t.category === rec.template.category
+      );
+      if (!exists) {
+        const id =
+          (transactions.reduce((m, t) => Math.max(m, t.id), 0) || 0) + 1;
+        transactions.push({
+          id,
+          type: rec.template.type,
+          category: rec.template.category,
+          note: rec.template.note,
+          amount: rec.template.amount,
+          date: dateStr,
+          recurringId: rec.id,
+        });
+        changed = true;
+      }
+      rec.lastDate = dateStr;
+      last = next;
+    }
+  }
+
+  if (changed) {
+    saveTxns(transactions);
+    saveRecurring(recs);
+  }
+}
+
+// run recurring expansion once on load
+applyRecurring();
+
 
 // Elements
-const txnList = document.querySelector("#txn-list");
-const addWrap = document.querySelector("#add-form-wrap");
-const seg = document.querySelector("#txn-filter-seg");
-const toolbar = document.querySelector(".txn-toolbar");
-const addRow = document.querySelector(".txn-add-row");
-
-const form = document.querySelector("#txn-form");
-const openForm = document.querySelector("#txn-open-form");
+const txnList   = document.querySelector("#txn-list");
+const addWrap   = document.querySelector("#add-form-wrap");
+const seg       = document.querySelector("#txn-filter-seg");
+const addRow    = document.querySelector(".txn-add-row");
+const form      = document.querySelector("#txn-form");
+const openForm  = document.querySelector("#txn-open-form");
 const cancelBtn = document.querySelector("#txn-cancel");
+const modalClose = document.querySelector("#txn-modal-close");
 
-const typeEl = document.querySelector("#txn-type");
-const amtEl = document.querySelector("#txn-amount");
-const dateEl = document.querySelector("#txn-date");
-const noteEl = document.querySelector("#txn-note");
+const typeEl   = document.querySelector("#txn-type");
+const amtEl    = document.querySelector("#txn-amount");
+const dateEl   = document.querySelector("#txn-date");
+const noteEl   = document.querySelector("#txn-note");
+const catEl    = document.querySelector("#category");
+
+const categoryFilterEl = document.querySelector("#txn-filter-category");
+const sortEl           = document.querySelector("#txn-sort");
+const dateFilterEl     = document.querySelector("#txn-filter-date");
+
+const recurringCheckbox = document.querySelector("#txn-recurring");
+const freqEl            = document.querySelector("#txn-frequency");
 
 // UI state
-let currentMode = "list"; // 'list' | 'add'
-let currentFilter = "all"; // 'all' | 'expense' | 'income'
+let currentMode          = "list";   // 'list' | 'add'
+let currentFilter        = "all";    // 'all' | 'expense' | 'income'
+let currentCategoryFilter = "all";
+let currentSort          = "date-desc";
+let currentDateFilter    = "all";
 
-// Helpers
+
 function formatCurrency(num) {
   return (num < 0 ? "-$" : "$") + Math.abs(num).toFixed(2);
 }
@@ -111,21 +214,15 @@ function setMode(mode) {
   currentMode = mode;
   const inAdd = mode === "add";
 
-  // Show ONLY the add form in add mode
-  if (toolbar) toolbar.hidden = inAdd;
-  if (addRow) addRow.hidden = inAdd;
-  if (txnList) txnList.hidden = inAdd;
-  if (addWrap) addWrap.hidden = !inAdd;
+  if (addWrap) {
+    addWrap.hidden = !inAdd;
+  }
 
   if (inAdd) {
     if (amtEl) amtEl.focus();
-    // ensure date defaults to today each time
     if (dateEl) {
       const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const dd = String(today.getDate()).padStart(2, "0");
-      dateEl.value = `${yyyy}-${mm}-${dd}`;
+      dateEl.value = formatDate(today);
     }
   } else {
     renderTransactions(currentFilter);
@@ -134,7 +231,6 @@ function setMode(mode) {
 
 function setFilter(filter, btn) {
   currentFilter = filter;
-  // update filter buttons UI
   if (seg) {
     const btns = Array.from(seg.querySelectorAll(".seg-btn[data-filter]"));
     btns.forEach((b) => {
@@ -143,7 +239,6 @@ function setFilter(filter, btn) {
       b.setAttribute("aria-pressed", String(on));
     });
   }
-  // always switch to list view when choosing a filter
   setMode("list");
 }
 
@@ -151,12 +246,38 @@ function renderTransactions(view = "all") {
   if (!txnList) return;
   txnList.innerHTML = "";
 
-  const filtered = transactions.filter((t) =>
-    view === "all" ? true : t.type === view
-  );
+  const now = new Date();
 
-  // recent first
-  filtered.sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
+  let filtered = transactions.filter((t) => {
+    if (view !== "all" && t.type !== view) return false;
+
+    if (currentCategoryFilter !== "all" && t.category !== currentCategoryFilter)
+      return false;
+
+    if (currentDateFilter !== "all") {
+      const d = parseISO(t.date);
+      const diffDays = (now - d) / (1000 * 60 * 60 * 24);
+      if (currentDateFilter === "last7" && diffDays > 7) return false;
+      if (currentDateFilter === "last30" && diffDays > 30) return false;
+    }
+
+    return true;
+  });
+
+  // sort
+  filtered.sort((a, b) => {
+    switch (currentSort) {
+      case "date-asc":
+        return a.date.localeCompare(b.date) || a.id - b.id;
+      case "amount-desc":
+        return b.amount - a.amount;
+      case "amount-asc":
+        return a.amount - b.amount;
+      case "date-desc":
+      default:
+        return b.date.localeCompare(a.date) || b.id - a.id;
+    }
+  });
 
   for (const t of filtered) {
     const item = document.createElement("div");
@@ -175,9 +296,7 @@ function renderTransactions(view = "all") {
         <div class="txn-amt">${formatCurrency(displayAmount)}</div>
         <div class="txn-date">${t.date}</div>
       </div>
-      <button class="txn-del" title="Delete" aria-label="Delete transaction" data-id="${
-        t.id
-      }">&times;</button>
+      <button class="txn-del" title="Delete" aria-label="Delete transaction" data-id="${t.id}">&times;</button>
     `;
     txnList.appendChild(item);
   }
@@ -189,13 +308,25 @@ function renderTransactions(view = "all") {
     txnList.appendChild(empty);
   }
 
-  // Hook delete buttons
+  // delete with confirmation
   Array.from(txnList.querySelectorAll(".txn-del")).forEach((btn) => {
     btn.addEventListener("click", () => {
       const id = Number(btn.dataset.id);
+      const match = transactions.find((t) => t.id === id);
+      const label = match
+        ? `${match.category} ${formatCurrency(
+            match.type === "expense" ? -match.amount : match.amount
+          )} on ${match.date}`
+        : "this transaction";
+
+      if (!window.confirm(`Delete ${label}? This action cannot be undone.`)) {
+        return;
+      }
+
       transactions = transactions.filter((t) => t.id !== id);
       saveTxns(transactions);
       renderTransactions(currentFilter);
+      renderLatestTransaction();
     });
   });
 }
@@ -212,17 +343,88 @@ if (seg) {
   });
 }
 
-// Open Add (form-only screen)
+// Build category filter options from the category select
+if (categoryFilterEl && catEl) {
+  const values = Array.from(catEl.options)
+    .map((o) => o.value)
+    .filter((v) => v && v.trim().length > 0);
+
+  categoryFilterEl.innerHTML =
+    `<option value="all">All categories</option>` +
+    values
+      .filter((v, i, arr) => arr.indexOf(v) === i)
+      .map((v) => `<option value="${v}">${v}</option>`)
+      .join("");
+
+  categoryFilterEl.addEventListener("change", () => {
+    currentCategoryFilter = categoryFilterEl.value;
+    renderTransactions(currentFilter);
+  });
+}
+
+if (sortEl) {
+  sortEl.addEventListener("change", () => {
+    currentSort = sortEl.value;
+    renderTransactions(currentFilter);
+  });
+}
+
+if (dateFilterEl) {
+  dateFilterEl.addEventListener("change", () => {
+    currentDateFilter = dateFilterEl.value;
+    renderTransactions(currentFilter);
+  });
+}
+
+// recurring toggle: enable/disable frequency select
+if (recurringCheckbox && freqEl) {
+  recurringCheckbox.addEventListener("change", () => {
+    const on = recurringCheckbox.checked;
+    freqEl.disabled = !on;
+    if (!on) {
+      freqEl.value = "weekly";
+    }
+  });
+}
+
+// Wire filters (All / Expenses / Income)
+if (seg) {
+  const btns = Array.from(seg.querySelectorAll(".seg-btn[data-filter]"));
+  btns.forEach((b) => {
+    b.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setFilter(b.dataset.filter, b);
+    });
+  });
+}
+
+// Open Add (modal)
 if (openForm) {
   openForm.addEventListener("click", () => {
     setMode("add");
   });
 }
 
-// Cancel Add -> back to current list
+// Cancel Add -> close modal, back to list
 if (cancelBtn) {
   cancelBtn.addEventListener("click", () => {
     setMode("list");
+  });
+}
+
+if (modalClose) {
+  modalClose.addEventListener("click", () => {
+    setMode("list");
+  });
+}
+
+// close modal if user taps backdrop
+if (addWrap) {
+  addWrap.addEventListener("click", (e) => {
+    if (e.target === addWrap || e.target.classList.contains("txn-modal-backdrop")) {
+      setMode("list");
+    }
   });
 }
 
@@ -232,25 +434,47 @@ if (form) {
     e.preventDefault();
     const type = typeEl.value === "income" ? "income" : "expense";
     const amount = parseFloat(amtEl.value);
-    const category = document.getElementById("category").value;
+    const category = catEl.value;
     const date = dateEl.value;
     const note = (noteEl.value || "").trim();
     if (!amount || amount <= 0 || !category || !date) return;
 
+    const isRecurring = recurringCheckbox && recurringCheckbox.checked;
+    const frequency = freqEl && !freqEl.disabled ? freqEl.value : null;
+
+    // handle recurring definition
+    let recId = null;
+    if (isRecurring && frequency) {
+      let recs = loadRecurring() || [];
+      recId = (recs.reduce((m, r) => Math.max(m, r.id || 0), 0) || 0) + 1;
+      recs.push({
+        id: recId,
+        template: { type, category, note, amount },
+        frequency,
+        lastDate: date,
+      });
+      saveRecurring(recs);
+    }
+
     const id = (transactions.reduce((m, t) => Math.max(m, t.id), 0) || 0) + 1;
-    transactions.push({ id, type, category, note, amount, date });
+    transactions.push({ id, type, category, note, amount, date, recurringId: recId });
     saveTxns(transactions);
     renderLatestTransaction();
 
     // reset quick fields
     amtEl.value = "";
     noteEl.value = "";
-    document.getElementById("category").value = "";
+    catEl.value = "";
+    if (recurringCheckbox) recurringCheckbox.checked = false;
+    if (freqEl) {
+      freqEl.disabled = true;
+      freqEl.value = "weekly";
+    }
 
-    // go back to list and re-render using the currently selected filter
     setMode("list");
   });
 }
+
 
 function renderLatestTransaction() {
   const latestEl = document.getElementById("home-latest-txn");
