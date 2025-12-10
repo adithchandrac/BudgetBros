@@ -37,7 +37,7 @@
 
 // ====== Spending: transactions + filter/sort + recurring + delete-confirm (localStorage) ======
 const STORAGE_KEY = "cmsc434.transactions.v3";
-const RECUR_KEY   = "cmsc434.transactions.recurring.v1";
+const RECUR_KEY = "cmsc434.transactions.recurring.v1";
 
 function loadTxns() {
   try {
@@ -174,37 +174,35 @@ function applyRecurring() {
 // run recurring expansion once on load
 applyRecurring();
 
-
 // Elements
-const txnList   = document.querySelector("#txn-list");
-const addWrap   = document.querySelector("#add-form-wrap");
-const seg       = document.querySelector("#txn-filter-seg");
-const addRow    = document.querySelector(".txn-add-row");
-const form      = document.querySelector("#txn-form");
-const openForm  = document.querySelector("#txn-open-form");
+const txnList = document.querySelector("#txn-list");
+const addWrap = document.querySelector("#add-form-wrap");
+const seg = document.querySelector("#txn-filter-seg");
+const addRow = document.querySelector(".txn-add-row");
+const form = document.querySelector("#txn-form");
+const openForm = document.querySelector("#txn-open-form");
 const cancelBtn = document.querySelector("#txn-cancel");
 const modalClose = document.querySelector("#txn-modal-close");
 
-const typeEl   = document.querySelector("#txn-type");
-const amtEl    = document.querySelector("#txn-amount");
-const dateEl   = document.querySelector("#txn-date");
-const noteEl   = document.querySelector("#txn-note");
-const catEl    = document.querySelector("#category");
+const typeEl = document.querySelector("#txn-type");
+const amtEl = document.querySelector("#txn-amount");
+const dateEl = document.querySelector("#txn-date");
+const noteEl = document.querySelector("#txn-note");
+const catEl = document.querySelector("#category");
 
 const categoryFilterEl = document.querySelector("#txn-filter-category");
-const sortEl           = document.querySelector("#txn-sort");
-const dateFilterEl     = document.querySelector("#txn-filter-date");
+const sortEl = document.querySelector("#txn-sort");
+const dateFilterEl = document.querySelector("#txn-filter-date");
 
 const recurringCheckbox = document.querySelector("#txn-recurring");
-const freqEl            = document.querySelector("#txn-frequency");
+const freqEl = document.querySelector("#txn-frequency");
 
 // UI state
-let currentMode          = "list";   // 'list' | 'add'
-let currentFilter        = "all";    // 'all' | 'expense' | 'income'
+let currentMode = "list"; // 'list' | 'add'
+let currentFilter = "all"; // 'all' | 'expense' | 'income'
 let currentCategoryFilter = "all";
-let currentSort          = "date-desc";
-let currentDateFilter    = "all";
-
+let currentSort = "date-desc";
+let currentDateFilter = "all";
 
 function formatCurrency(num) {
   return (num < 0 ? "-$" : "$") + Math.abs(num).toFixed(2);
@@ -296,7 +294,9 @@ function renderTransactions(view = "all") {
         <div class="txn-amt">${formatCurrency(displayAmount)}</div>
         <div class="txn-date">${t.date}</div>
       </div>
-      <button class="txn-del" title="Delete" aria-label="Delete transaction" data-id="${t.id}">&times;</button>
+      <button class="txn-del" title="Delete" aria-label="Delete transaction" data-id="${
+        t.id
+      }">&times;</button>
     `;
     txnList.appendChild(item);
   }
@@ -422,7 +422,10 @@ if (modalClose) {
 // close modal if user taps backdrop
 if (addWrap) {
   addWrap.addEventListener("click", (e) => {
-    if (e.target === addWrap || e.target.classList.contains("txn-modal-backdrop")) {
+    if (
+      e.target === addWrap ||
+      e.target.classList.contains("txn-modal-backdrop")
+    ) {
       setMode("list");
     }
   });
@@ -457,7 +460,15 @@ if (form) {
     }
 
     const id = (transactions.reduce((m, t) => Math.max(m, t.id), 0) || 0) + 1;
-    transactions.push({ id, type, category, note, amount, date, recurringId: recId });
+    transactions.push({
+      id,
+      type,
+      category,
+      note,
+      amount,
+      date,
+      recurringId: recId,
+    });
     saveTxns(transactions);
     renderLatestTransaction();
 
@@ -474,7 +485,6 @@ if (form) {
     setMode("list");
   });
 }
-
 
 function renderLatestTransaction() {
   const latestEl = document.getElementById("home-latest-txn");
@@ -514,13 +524,8 @@ if (latestTxnBtn) {
 setMode("list");
 renderTransactions("all");
 renderLatestTransaction();
-
-const spans = document.querySelectorAll('span[id^="budget-"]');
-const overview = document.getElementById("budget-overview");
-
-/*Category list*/
-const categories = [
-  "Spending Limit",
+/* Fixed category options (no custom categories for now) */
+const categoryOptions = [
   "Bills & Utilities",
   "Transportation",
   "Groceries",
@@ -531,41 +536,595 @@ const categories = [
   "Miscellaneous",
 ];
 
-const budgets = {
-  Daily: new Array(categories.length).fill(0),
-  Weekly: new Array(categories.length).fill(0),
-  Monthly: new Array(categories.length).fill(0),
-  Yearly: new Array(categories.length).fill(0),
-};
+let monthlyBudget = null;
 
-function renderBudget(period) {
-  const data = budgets[period];
-  let ret = "";
-  if (data[0] == 0) {
-    ret = `
-        <div>
-          <p>No ${period} budget set yet.</p>
-          <button id="new-budget-btn" class='btn' >Create ${period} budget</button>
-        </div>
-      `;
-    document.getElementById("budget-overview").innerHTML = ret;
-    const newBdgt = document.getElementById("new-budget-btn");
-    newBdgt.addEventListener("click", () => budgetform(period));
-    return;
-  } else {
-    let ret = `<table class='budgets'>
-                  <tr><th>Category</th><th>Cap($)</th></tr>`;
-    for (let x = 0; x < categories.length; x++) {
-      ret += `<tr><td>${categories[x]}</td><td>${data[x]}</td></tr>`;
-    }
-    ret += `</table>             <button id="edit-button" class="btn">Edit Budget</button>`;
-    document.getElementById("budget-overview").innerHTML = ret;
-    const editbtn = document.getElementById("edit-button");
-    editbtn.addEventListener("click", () => budgetform(period));
-  }
+let savingsGoal = null;
+
+function getDaysInCurrentMonth() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
 }
 
-// Handle clicks and class toggling
+function renderSavings() {
+  const container = document.getElementById("savings-overview");
+  if (!container) return;
+
+  if (!savingsGoal) {
+    container.innerHTML = `
+      <p>No savings goal set yet.</p>
+      <button id="add-goal-btn" class="bdgt-btn">Add Savings Goal</button>
+    `;
+    document
+      .getElementById("add-goal-btn")
+      .addEventListener("click", showSavingsForm);
+    return;
+  }
+
+  const saved = savingsGoal.saved || 0;
+
+  container.innerHTML = `
+    <table class="budgets">
+      <thead>
+        <tr>
+          <th>Goal Name</th>
+          <th>Target Amount ($)</th>
+          <th>Money Saved ($)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${savingsGoal.name}</td>
+          <td>${savingsGoal.amount.toFixed(2)}</td>
+          <td>${saved.toFixed(2)}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="center-row">
+  <button id="edit-goal-btn" class="btn">Edit Goal</button>
+</div>
+
+  `;
+
+  document
+    .getElementById("edit-goal-btn")
+    .addEventListener("click", showSavingsForm);
+}
+
+function showSavingsForm() {
+  const container = document.getElementById("savings-overview");
+  if (!container) return;
+
+  const existing = savingsGoal || {
+    name: "",
+    amount: 0,
+    saved: 0,
+    autoFromLeftover: false,
+  };
+
+  container.innerHTML = `
+    <table class="budgets">
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Goal Name</td>
+          <td>
+            <input 
+              type="text" 
+              id="goal-name" 
+              class="category-amount"
+              value="${existing.name}">
+          </td>
+        </tr>
+        <tr>
+          <td>Target Amount ($)</td>
+          <td>
+            <input 
+              type="number" 
+              id="goal-amount" 
+              class="category-amount"
+              min="0"
+              step="0.01"
+              value="${existing.amount || 0}">
+          </td>
+        </tr>
+        <tr>
+          <td>Money Saved ($)</td>
+          <td>
+            <input 
+              type="number" 
+              id="goal-saved" 
+              class="category-amount"
+              min="0"
+              step="0.01"
+              value="${existing.saved || 0}">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <label style="display:block; margin-top: 8px;">
+      <input 
+        type="checkbox" 
+        id="goal-auto-leftover" 
+        ${existing.autoFromLeftover ? "checked" : ""}>
+      Automatically add leftover budget to savings goal at the end of the month?
+    </label>
+
+    <div class="budget-actions" style="margin-top: 12px;">
+      <button id="cancel-goal" class="bdgt-btn">Cancel</button>
+      <button id="save-goal" class="bdgt-btn">Save Goal</button>
+    </div>
+  `;
+
+  document
+    .getElementById("cancel-goal")
+    .addEventListener("click", renderSavings);
+
+  document.getElementById("save-goal").addEventListener("click", () => {
+    const name = document.getElementById("goal-name").value.trim();
+    const amountVal = parseFloat(document.getElementById("goal-amount").value);
+    const savedVal = parseFloat(document.getElementById("goal-saved").value);
+    const auto = document.getElementById("goal-auto-leftover").checked;
+
+    if (!name) {
+      alert("Please enter a goal name.");
+      return;
+    }
+    if (!Number.isFinite(amountVal) || amountVal <= 0) {
+      alert("Please enter a valid target amount.");
+      return;
+    }
+
+    const saved = Number.isFinite(savedVal) && savedVal >= 0 ? savedVal : 0;
+
+    savingsGoal = {
+      name,
+      amount: amountVal,
+      saved,
+      autoFromLeftover: auto,
+    };
+
+    // Cap saved so it never exceeds target
+    if (savingsGoal.saved > savingsGoal.amount) {
+      savingsGoal.saved = savingsGoal.amount;
+    }
+
+    renderSavings();
+  });
+}
+
+function hasBudget() {
+  return (
+    monthlyBudget &&
+    Number.isFinite(monthlyBudget.income) &&
+    monthlyBudget.income > 0 &&
+    Array.isArray(monthlyBudget.categories) &&
+    monthlyBudget.categories.length > 0
+  );
+}
+
+function computeMonthlyTotals() {
+  if (!hasBudget()) return { income: 0, spending: 0, leftover: 0 };
+
+  const income = monthlyBudget.income;
+  const spending = monthlyBudget.categories.reduce(
+    (sum, item) => sum + (item.amount || 0),
+    0
+  );
+  return {
+    income,
+    spending,
+    leftover: income - spending,
+  };
+}
+
+function renderBudget(period) {
+  const overview = document.getElementById("budget-overview");
+  if (!overview) return;
+
+  const days = getDaysInCurrentMonth();
+  const totals = computeMonthlyTotals();
+
+  // If no budget yet, show one unified "Make a Budget" button for all periods
+  if (!hasBudget()) {
+    overview.innerHTML = `
+      <div>
+        <p>No budget has been created yet.</p>
+        <button id="make-budget-btn" class="btn">Make a Budget</button>
+      </div>
+    `;
+    document
+      .getElementById("make-budget-btn")
+      .addEventListener("click", showBudgetForm);
+    renderSavings();
+    return;
+  }
+
+  // We have a monthly budget; scale for different views
+  let factor = 1;
+  let periodLabel = "";
+  if (period === "Daily") {
+    factor = 1 / days;
+    periodLabel = "Daily";
+  } else if (period === "Yearly") {
+    factor = 12;
+    periodLabel = "Yearly";
+  } else {
+    // Monthly (default)
+    factor = 1;
+    periodLabel = "Monthly";
+  }
+
+  const incomeScaled = totals.income * factor;
+  const spendingScaled = totals.spending * factor;
+  const leftoverScaled = totals.leftover * factor;
+
+  // ONE line: Income | Planned | Leftover (no period words in labels)
+  let summaryHtml = `
+    <div class="budget-summary">
+      <p>
+        <strong>Income:</strong> $${incomeScaled.toFixed(2)}
+        &nbsp; | &nbsp;
+        <strong>Planned Spending:</strong> $${spendingScaled.toFixed(2)}
+        &nbsp; | &nbsp;
+        <strong>Leftover:</strong> $${leftoverScaled.toFixed(2)}
+      </p>
+  `;
+
+  // Keep explanatory note for scaling
+  if (period === "Daily") {
+    summaryHtml += `<p>(Scaled from your Monthly budget over ${days} days.)</p>`;
+  } else if (period === "Yearly") {
+    summaryHtml += `<p>(Scaled from your Monthly budget × 12.)</p>`;
+  }
+
+  summaryHtml += `</div>`;
+
+  // Table now: Category | Budgeted ($) | Spent ($)
+  let tableHtml = `
+    <table class="budgets">
+      <tr>
+        <th>Category</th>
+        <th>Budgeted ($)</th>
+        <th>Spent ($)</th>
+      </tr>
+  `;
+
+  monthlyBudget.categories.forEach((item) => {
+    const budgetAmountScaled = (item.amount || 0) * factor;
+    const spent = getSpentForCategory(item.category, period);
+
+    tableHtml += `
+      <tr>
+        <td>${item.category}</td>
+        <td>${budgetAmountScaled.toFixed(2)}</td>
+        <td>${spent.toFixed(2)}</td>
+      </tr>
+    `;
+  });
+
+  tableHtml += `</table>`;
+
+  const editButtonHtml = `
+   <div class="center-row">
+  <button id="edit-budget-btn" class="btn">Edit Budget</button>
+  </div>`;
+
+  overview.innerHTML = summaryHtml + tableHtml + editButtonHtml;
+
+  document
+    .getElementById("edit-budget-btn")
+    .addEventListener("click", showBudgetForm);
+
+  renderSavings();
+}
+
+/* ----- Helpers for "Spent" per category / period ----- */
+
+function isSameDay(d1, d2) {
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
+}
+
+function isSameMonthYear(d1, d2) {
+  return (
+    d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth()
+  );
+}
+
+function isSameYear(d1, d2) {
+  return d1.getFullYear() === d2.getFullYear();
+}
+
+/**
+ * Get amount spent (expenses only) for a given category
+ * in the current period: "Daily" | "Monthly" | "Yearly"
+ */
+function getSpentForCategory(category, period) {
+  if (!Array.isArray(transactions)) return 0;
+
+  const today = new Date();
+  let total = 0;
+
+  for (const t of transactions) {
+    if (!t) continue;
+    if (t.type !== "expense") continue; // only count expenses
+    if (t.category !== category) continue;
+    if (!t.date) continue;
+
+    const d = parseISO(t.date);
+
+    if (period === "Daily" && !isSameDay(d, today)) continue;
+    if (period === "Monthly" && !isSameMonthYear(d, today)) continue;
+    if (period === "Yearly" && !isSameYear(d, today)) continue;
+
+    if (Number.isFinite(t.amount)) {
+      total += t.amount;
+    }
+  }
+
+  return total;
+}
+
+function showBudgetForm() {
+  const overview = document.getElementById("budget-overview");
+  if (!overview) return;
+
+  const existing = monthlyBudget || {
+    income: 0,
+    categories: [],
+  };
+
+  let rowsHtml = "";
+  existing.categories.forEach((item, idx) => {
+    rowsHtml += createCategoryRowHtml(idx, item.category, item.amount);
+  });
+
+  overview.innerHTML = `
+    <div class="budget-form">
+      <label>
+        Monthly Income ($):
+        <input 
+          type="number" 
+          id="budget-income" 
+          min="0" 
+          step="0.01"
+          value="${existing.income || 0}">
+      </label>
+
+      <table class="budgets">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Monthly Amount ($)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="budget-categories">
+          ${rowsHtml}
+        </tbody>
+      </table>
+
+      <button id="add-category-btn" class="bdgt-btn">Add Category</button>
+
+      <p id="budget-total-display"></p>
+
+      <div class="budget-actions">
+        <button id="cancel-budget" class="bdgt-btn">Cancel</button>
+        <button id="save-budget" class="bdgt-btn">Save Budget</button>
+      </div>
+    </div>
+  `;
+
+  const categoriesBody = document.getElementById("budget-categories");
+
+  function getNextRowIndex() {
+    const rows = categoriesBody.querySelectorAll(".budget-category-row");
+    return rows.length;
+  }
+
+  function addCategoryRow(category = "", amount = 0) {
+    const idx = getNextRowIndex();
+    categoriesBody.insertAdjacentHTML(
+      "beforeend",
+      createCategoryRowHtml(idx, category, amount)
+    );
+    attachRowHandlers();
+    updateTotal();
+  }
+
+  function attachRowHandlers() {
+    // Remove buttons
+    const removeButtons = categoriesBody.querySelectorAll(
+      ".remove-category-btn"
+    );
+    removeButtons.forEach((btn) => {
+      btn.onclick = () => {
+        const row = btn.closest(".budget-category-row");
+        if (row) {
+          row.remove();
+          updateTotal();
+        }
+      };
+    });
+
+    // Amount inputs → update total
+    const amountInputs = categoriesBody.querySelectorAll(".category-amount");
+    amountInputs.forEach((inp) => {
+      inp.oninput = updateTotal;
+    });
+  }
+
+  function updateTotal() {
+    const rows = categoriesBody.querySelectorAll(".budget-category-row");
+    let sum = 0;
+
+    rows.forEach((row) => {
+      const amountInput = row.querySelector(".category-amount");
+      const v = parseFloat(amountInput.value);
+      if (Number.isFinite(v) && v > 0) sum += v;
+    });
+
+    const totalDisplay = document.getElementById("budget-total-display");
+    const incomeVal = parseFloat(
+      document.getElementById("budget-income").value
+    );
+
+    if (!totalDisplay) return;
+
+    if (!Number.isFinite(incomeVal) || incomeVal <= 0) {
+      totalDisplay.innerHTML = `
+        <strong>Total Planned Spending:</strong> $${sum.toFixed(
+          2
+        )} (Enter a valid income to compare)
+      `;
+      return;
+    }
+
+    const remaining = incomeVal - sum;
+    const status =
+      remaining < 0
+        ? `<span style="color:red;">Over by $${Math.abs(remaining).toFixed(
+            2
+          )}</span>`
+        : `<span>Remaining: $${remaining.toFixed(2)}</span>`;
+
+    totalDisplay.innerHTML = `
+      <strong>Total Planned Spending:</strong> $${sum.toFixed(2)}<br>
+      ${status}
+    `;
+  }
+
+  // If no categories yet, start with one empty row
+  if (!existing.categories.length) {
+    addCategoryRow();
+  } else {
+    attachRowHandlers();
+    updateTotal();
+  }
+
+  document
+    .getElementById("add-category-btn")
+    .addEventListener("click", () => addCategoryRow());
+
+  document
+    .getElementById("cancel-budget")
+    .addEventListener("click", () => renderBudget("Monthly"));
+
+  document.getElementById("save-budget").addEventListener("click", () => {
+    const incomeVal = parseFloat(
+      document.getElementById("budget-income").value
+    );
+    if (!Number.isFinite(incomeVal) || incomeVal <= 0) {
+      alert("Please enter a valid monthly income greater than 0.");
+      return;
+    }
+
+    const rows = categoriesBody.querySelectorAll(".budget-category-row");
+    const newCategories = [];
+    let sumSpending = 0;
+
+    rows.forEach((row) => {
+      const select = row.querySelector(".category-select");
+      const amountInput = row.querySelector(".category-amount");
+
+      const cat = select.value;
+      const amt = parseFloat(amountInput.value);
+
+      if (!cat) return;
+      if (!Number.isFinite(amt) || amt < 0) return;
+
+      newCategories.push({
+        category: cat,
+        amount: amt,
+      });
+      sumSpending += amt;
+    });
+
+    if (!newCategories.length) {
+      alert("Please add at least one category with a positive amount.");
+      return;
+    }
+
+    if (sumSpending > incomeVal + 1e-6) {
+      alert(
+        `Your planned spending ($${sumSpending.toFixed(
+          2
+        )}) exceeds your monthly income ($${incomeVal.toFixed(2)}).`
+      );
+      return;
+    }
+
+    monthlyBudget = {
+      income: incomeVal,
+      categories: newCategories,
+    };
+
+    if (savingsGoal && savingsGoal.autoFromLeftover) {
+      const today = new Date();
+      const daysInMonth = getDaysInCurrentMonth();
+      if (today.getDate() === daysInMonth) {
+        const totalsAfter = computeMonthlyTotals();
+        const leftover = totalsAfter.leftover;
+
+        if (leftover > 0) {
+          const prevSaved = savingsGoal.saved || 0;
+          savingsGoal.saved = prevSaved + leftover;
+
+          // Cap saved so it never exceeds the target amount
+          if (savingsGoal.saved > savingsGoal.amount) {
+            savingsGoal.saved = savingsGoal.amount;
+          }
+        }
+      }
+    }
+
+    renderBudget("Monthly");
+  });
+}
+
+/* Helper to generate the HTML for a single category row */
+function createCategoryRowHtml(index, selectedCategory = "", amount = 0) {
+  let optionsHtml = `<option value="">Select</option>`;
+  categoryOptions.forEach((cat) => {
+    const selectedAttr = cat === selectedCategory ? "selected" : "";
+    optionsHtml += `<option value="${cat}" ${selectedAttr}>${cat}</option>`;
+  });
+
+  return `
+    <tr class="budget-category-row" data-row-index="${index}">
+      <td>
+        <select class="category-select">
+          ${optionsHtml}
+        </select>
+      </td>
+      <td>
+        <input 
+          type="number" 
+          class="category-amount"
+          min="0"
+          step="0.01"
+          value="${amount || 0}">
+      </td>
+      <td>
+        <button type="button" class="remove-category-btn bdgt-btn">Remove</button>
+      </td>
+    </tr>
+  `;
+}
+
+/* ---------- Time period toggle setup ---------- */
+
+const spans = document.querySelectorAll(".home-range span");
 spans.forEach((span) => {
   span.addEventListener("click", () => {
     spans.forEach((s) => s.classList.remove("is-active"));
@@ -575,130 +1134,11 @@ spans.forEach((span) => {
   });
 });
 
-const defaultBudgetSpan = document.getElementById("budget-daily");
+/* Default view: Monthly */
+const defaultBudgetSpan = document.getElementById("budget-monthly");
 if (defaultBudgetSpan) {
   defaultBudgetSpan.classList.add("is-active");
-  renderBudget("Daily");
-}
-
-function budgetform(period) {
-  let overview = document.getElementById("budget-overview");
-  let data = budgets[period];
-  overview.innerHTML = "";
-
-  let ret = `
-    <table class="budgets">
-      <tr><th>Category</th><th>$</th></tr>
-      <tr>
-        <td>${categories[0]}</td>
-        <td>
-          <input 
-            type="number"
-            required
-            id="spending-amnt"       
-            class="budget-input"
-            min="0"
-            step="10"
-            value="${data[0] ?? 0}">
-        </td>
-      </tr>
-  `;
-
-  for (let x = 1; x < categories.length; x++) {
-    ret += `
-      <tr>
-        <td>${categories[x]}</td>
-        <td>
-          <input 
-            type="number" 
-            required
-            id="${categories[x]}-amount"
-            class="budget-input"
-            min="0"
-            step="0.01"
-            value="${data[x] ?? 0}">
-        </td>
-      </tr>`;
-  }
-  ret += `</table>`;
-
-  overview.innerHTML =
-    ret +
-    `
-    <button id="cancel-budget" class="bdgt-btn">Cancel</button>
-    <button id="automate-budget" class="bdgt-btn">Sample Budget</button>
-    <button id="save-budget" class="bdgt-btn">Save Budget</button>
-  `;
-
-  document.getElementById("cancel-budget").addEventListener("click", () => {
-    renderBudget(period);
-  });
-
-  document.getElementById("automate-budget").addEventListener("click", () => {
-    const limit = parseFloat(document.getElementById("spending-amnt").value);
-    if (!Number.isFinite(limit) || limit <= 1) {
-      alert(
-        "Please assign a spending limit (> 1) so we can generate a sample budget"
-      );
-      return;
-    }
-
-    // percentages aligned to categories
-    const pct = [
-      1.0, // Spending Limit
-      0.3,
-      0.1,
-      0.1,
-      0.05,
-      0.05,
-      0.05,
-      0.25,
-      0.0,
-    ];
-
-    let allocated = 0;
-    for (let i = 1; i < categories.length - 1; i++) {
-      const v = +(limit * pct[i]).toFixed(2);
-      allocated += v;
-      const temp = document.getElementById(`${categories[i]}-amount`);
-      if (temp) temp.value = v.toFixed(2);
-    }
-
-    const remainder = +(limit - allocated).toFixed(2);
-    const miscEl = document.getElementById("Miscellaneous-amount");
-    if (miscEl) miscEl.value = remainder.toFixed(2);
-  });
-
-  document.getElementById("save-budget").addEventListener("click", () => {
-    const limit = parseFloat(document.getElementById("spending-amnt").value);
-    if (!Number.isFinite(limit) || limit <= 1) {
-      alert("Spending Limit must be greater than 1.");
-      return;
-    }
-    let vals = new Array(categories.length).fill(0);
-    vals[0] = limit;
-
-    let sum = 0;
-    for (let i = 1; i < categories.length; i++) {
-      const temp = document.getElementById(`${categories[i]}-amount`);
-      const v = parseFloat(temp.value);
-      vals[i] = v;
-      sum += vals[i];
-    }
-
-    if (Math.abs(sum - limit).toFixed(2) != 0) {
-      alert(
-        `All categories must add up to the Spending Limit. Current total: $${sum.toFixed(
-          2
-        )} vs $${limit.toFixed(2)}.`
-      );
-      return;
-    }
-
-    // Save to budgets and re-render
-    budgets[period] = vals;
-    renderBudget(period);
-  });
+  renderBudget("Monthly");
 }
 
 //Spending Graph
@@ -839,8 +1279,8 @@ function budgetform(period) {
   const centerY = 130;
   const radius = 100;
 
-  let exploded = null; 
-  let hovered = null;  
+  let exploded = null;
+  let hovered = null;
 
   //Store slice angle info for hit detection
   const sliceInfo = [];
@@ -958,124 +1398,128 @@ function budgetform(period) {
   drawPie();
 })();
 
-  //Profile avatar selector
-  (() => {
-    const AVATAR_KEY = "cmsc434.profile.avatar1";
-    const ALLOWED = new Set([
-      "pfp.png",
-      "crab.png",
-      "jellyfish.png",
-      "fox.png",
-      "koala.png",
-    ]);
+//Profile avatar selector
+(() => {
+  const AVATAR_KEY = "cmsc434.profile.avatar1";
+  const ALLOWED = new Set([
+    "pfp.png",
+    "crab.png",
+    "jellyfish.png",
+    "fox.png",
+    "koala.png",
+  ]);
 
-    const avatarImg = document.getElementById("profile-avatar");
-    const editBtn = document.getElementById("pfp-edit");
-    const popover = document.getElementById("avatar-popover");
+  const avatarImg = document.getElementById("profile-avatar");
+  const editBtn = document.getElementById("pfp-edit");
+  const popover = document.getElementById("avatar-popover");
 
-    if (!avatarImg || !editBtn || !popover) return;
+  if (!avatarImg || !editBtn || !popover) return;
 
-    const normalize = (f) => (f && ALLOWED.has(f) ? f : "pfp.png");
+  const normalize = (f) => (f && ALLOWED.has(f) ? f : "pfp.png");
 
-    const getSaved = () => {
-      try {
-        return normalize(localStorage.getItem(AVATAR_KEY));
-      } catch {
-        return "pfp.png";
-      }
-    };
-    const setSaved = (f) => {
-      try {
-        localStorage.setItem(AVATAR_KEY, normalize(f));
-      } catch {}
-    };
-    const apply = (f) => {
-      avatarImg.src = `./assets/icons/${normalize(f)}`;
-    };
+  const getSaved = () => {
+    try {
+      return normalize(localStorage.getItem(AVATAR_KEY));
+    } catch {
+      return "pfp.png";
+    }
+  };
+  const setSaved = (f) => {
+    try {
+      localStorage.setItem(AVATAR_KEY, normalize(f));
+    } catch {}
+  };
+  const apply = (f) => {
+    avatarImg.src = `./assets/icons/${normalize(f)}`;
+  };
 
-    const open = () => {
-      popover.hidden = false;
-    };
-    const close = () => {
-      popover.hidden = true;
-    };
-    const toggle = () => {
-      popover.hidden = !popover.hidden;
-    };
+  const open = () => {
+    popover.hidden = false;
+  };
+  const close = () => {
+    popover.hidden = true;
+  };
+  const toggle = () => {
+    popover.hidden = !popover.hidden;
+  };
 
+  close();
+  apply(getSaved());
+
+  editBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggle();
+  });
+
+  popover.addEventListener("click", (e) => {
+    const btn = e.target.closest(".avatar-opt");
+    if (!btn) return;
+    const file = btn.dataset.avatar;
+    apply(file);
+    setSaved(file);
     close();
-    apply(getSaved());
+  });
 
-    editBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      toggle();
-    });
+  document.addEventListener("click", (e) => {
+    if (popover.hidden) return;
+    if (!e.target.closest(".pfp-wrap")) close();
+  });
 
-    popover.addEventListener("click", (e) => {
-      const btn = e.target.closest(".avatar-opt");
-      if (!btn) return;
-      const file = btn.dataset.avatar;
-      apply(file);
-      setSaved(file);
-      close();
-    });
-
-    document.addEventListener("click", (e) => {
-      if (popover.hidden) return;
-      if (!e.target.closest(".pfp-wrap")) close();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") close();
-    });
-  })();
-  (() => {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") close();
+  });
+})();
+(() => {
   const PROFILE_KEY = "cmsc434.profile.v1";
 
   // inputs
   const fields = {
-    name:     document.getElementById("pf-name"),
-    income:   document.getElementById("pf-income"),
-    email:    document.getElementById("pf-email"),
-    phone:    document.getElementById("pf-phone"),
-    city:     document.getElementById("pf-city"),
+    name: document.getElementById("pf-name"),
+    income: document.getElementById("pf-income"),
+    email: document.getElementById("pf-email"),
+    phone: document.getElementById("pf-phone"),
+    city: document.getElementById("pf-city"),
     currency: document.getElementById("pf-currency"),
   };
 
   const btnSave = document.getElementById("pf-save");
   const btnEdit = document.getElementById("pf-edit");
 
-  if (!btnSave || !btnEdit || Object.values(fields).some(el => !el)) return;
+  if (!btnSave || !btnEdit || Object.values(fields).some((el) => !el)) return;
 
   const loadProfile = () => {
     try {
       const raw = localStorage.getItem(PROFILE_KEY);
       return raw ? JSON.parse(raw) : null;
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   };
 
   const saveProfile = (data) => {
-    try { localStorage.setItem(PROFILE_KEY, JSON.stringify(data)); } catch {}
+    try {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(data));
+    } catch {}
   };
 
   const setDisabled = (isDisabled) => {
-    Object.values(fields).forEach(el => el.disabled = isDisabled);
+    Object.values(fields).forEach((el) => (el.disabled = isDisabled));
   };
 
   const setMode = (mode) => {
     // mode: 'view' or 'edit'
     const view = mode === "view";
     setDisabled(view);
-    btnEdit.hidden = !view;   // show Edit only in view
-    btnSave.hidden = view;    // show Save only in edit
+    btnEdit.hidden = !view; // show Edit only in view
+    btnSave.hidden = view; // show Save only in edit
   };
 
   const apply = (data) => {
-    fields.name.value     = data?.name ?? "";
-    fields.income.value   = data?.income ?? "";
-    fields.email.value    = data?.email ?? "";
-    fields.phone.value    = data?.phone ?? "";
-    fields.city.value     = data?.city ?? "";
+    fields.name.value = data?.name ?? "";
+    fields.income.value = data?.income ?? "";
+    fields.email.value = data?.email ?? "";
+    fields.phone.value = data?.phone ?? "";
+    fields.city.value = data?.city ?? "";
     fields.currency.value = data?.currency ?? "USD";
   };
 
@@ -1086,7 +1530,9 @@ function budgetform(period) {
   // if we have nothing saved yet -> start in EDIT with Save visible
   const nothingSaved =
     !existing ||
-    Object.values(existing).every(v => v === "" || v === null || typeof v === "undefined");
+    Object.values(existing).every(
+      (v) => v === "" || v === null || typeof v === "undefined"
+    );
 
   setMode(nothingSaved ? "edit" : "view");
 
@@ -1095,11 +1541,11 @@ function budgetform(period) {
 
   btnSave.addEventListener("click", () => {
     const data = {
-      name:     fields.name.value.trim(),
-      income:   fields.income.value ? Number(fields.income.value) : "",
-      email:    fields.email.value.trim(),
-      phone:    fields.phone.value.trim(),
-      city:     fields.city.value.trim(),
+      name: fields.name.value.trim(),
+      income: fields.income.value ? Number(fields.income.value) : "",
+      email: fields.email.value.trim(),
+      phone: fields.phone.value.trim(),
+      city: fields.city.value.trim(),
       currency: fields.currency.value || "USD",
     };
     saveProfile(data);
@@ -1107,10 +1553,8 @@ function budgetform(period) {
   });
 })();
 
-
-
-//  ON-SCREEN KEYBOARD 
-(function() {
+//  ON-SCREEN KEYBOARD
+(function () {
   let activeInput = null;
   let keyboardVisible = false;
 
@@ -1177,18 +1621,18 @@ function budgetform(period) {
   `;
 
   // Insert keyboard into DOM
-  document.body.insertAdjacentHTML('beforeend', keyboardHTML);
-  const keyboard = document.getElementById('on-screen-keyboard');
+  document.body.insertAdjacentHTML("beforeend", keyboardHTML);
+  const keyboard = document.getElementById("on-screen-keyboard");
 
   function showKeyboard(input) {
     activeInput = input;
     keyboardVisible = true;
-    
+
     keyboard.hidden = false;
-    
+
     // scroll in put into view
     setTimeout(() => {
-      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      input.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 100);
   }
 
@@ -1205,19 +1649,22 @@ function budgetform(period) {
     const inputType = activeInput.type;
     const currentValue = activeInput.value;
     const selectionStart = activeInput.selectionStart || currentValue.length;
-    
-    if (inputType === 'number') {
+
+    if (inputType === "number") {
       // Only allow numbers and one decimal point
-      if (key === '.' && currentValue.includes('.')) return;
+      if (key === "." && currentValue.includes(".")) return;
       if (!/[0-9.]/.test(key)) return;
     }
 
-    const newValue = currentValue.slice(0, selectionStart) + key + currentValue.slice(selectionStart);
+    const newValue =
+      currentValue.slice(0, selectionStart) +
+      key +
+      currentValue.slice(selectionStart);
     activeInput.value = newValue;
-    
+
     // Trigger input event for any listeners
-    activeInput.dispatchEvent(new Event('input', { bubbles: true }));
-    
+    activeInput.dispatchEvent(new Event("input", { bubbles: true }));
+
     // Move cursor forward
     const newPos = selectionStart + 1;
     activeInput.setSelectionRange(newPos, newPos);
@@ -1225,23 +1672,25 @@ function budgetform(period) {
 
   function handleBackspace() {
     if (!activeInput) return;
-    
+
     const currentValue = activeInput.value;
     const selectionStart = activeInput.selectionStart || currentValue.length;
-    
+
     if (selectionStart === 0) return;
-    
-    const newValue = currentValue.slice(0, selectionStart - 1) + currentValue.slice(selectionStart);
+
+    const newValue =
+      currentValue.slice(0, selectionStart - 1) +
+      currentValue.slice(selectionStart);
     activeInput.value = newValue;
-    
-    activeInput.dispatchEvent(new Event('input', { bubbles: true }));
-    
+
+    activeInput.dispatchEvent(new Event("input", { bubbles: true }));
+
     const newPos = selectionStart - 1;
     activeInput.setSelectionRange(newPos, newPos);
   }
 
-  keyboard.addEventListener('click', (e) => {
-    const btn = e.target.closest('.key');
+  keyboard.addEventListener("click", (e) => {
+    const btn = e.target.closest(".key");
     if (!btn) return;
 
     e.preventDefault();
@@ -1250,9 +1699,9 @@ function budgetform(period) {
     const key = btn.dataset.key;
     const action = btn.dataset.action;
 
-    if (action === 'backspace') {
+    if (action === "backspace") {
       handleBackspace();
-    } else if (action === 'done') {
+    } else if (action === "done") {
       hideKeyboard();
       if (activeInput) activeInput.blur();
     } else if (key) {
@@ -1262,23 +1711,25 @@ function budgetform(period) {
 
   // Attach to all relevant inputs
   function attachKeyboard() {
-    const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], input[type="tel"]');
-    
-    inputs.forEach(input => {
+    const inputs = document.querySelectorAll(
+      'input[type="text"], input[type="number"], input[type="email"], input[type="tel"]'
+    );
+
+    inputs.forEach((input) => {
       // Skip if already attached
-      if (input.dataset.keyboardAttached === 'true') return;
-      input.dataset.keyboardAttached = 'true';
-      
+      if (input.dataset.keyboardAttached === "true") return;
+      input.dataset.keyboardAttached = "true";
+
       // Show keyboard on focus/click
       const showHandler = (e) => {
         e.preventDefault();
         e.stopPropagation();
         showKeyboard(input);
       };
-      
-      input.addEventListener('focus', showHandler);
-      input.addEventListener('click', showHandler);
-      input.addEventListener('touchstart', showHandler, { passive: false });
+
+      input.addEventListener("focus", showHandler);
+      input.addEventListener("click", showHandler);
+      input.addEventListener("touchstart", showHandler, { passive: false });
     });
   }
 
@@ -1294,26 +1745,35 @@ function budgetform(period) {
   observer.observe(document.body, { childList: true, subtree: true });
 
   // Hide keyboard when clicked outside
-  document.addEventListener('click', (e) => {
+  document.addEventListener("click", (e) => {
     if (!keyboardVisible) return;
     if (keyboard.contains(e.target)) return;
-    if (e.target.matches('input[type="text"], input[type="number"], input[type="email"], input[type="tel"]')) return;
-    
+    if (
+      e.target.matches(
+        'input[type="text"], input[type="number"], input[type="email"], input[type="tel"]'
+      )
+    )
+      return;
+
     hideKeyboard();
   });
 
   // Prevent the keyboard from closing when clicking on it
-  keyboard.addEventListener('mousedown', (e) => {
+  keyboard.addEventListener("mousedown", (e) => {
     e.preventDefault();
   });
 
-  keyboard.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-  }, { passive: false });
+  keyboard.addEventListener(
+    "touchstart",
+    (e) => {
+      e.preventDefault();
+    },
+    { passive: false }
+  );
 
   // Make functions available globally if needed
   window.onScreenKeyboard = {
     show: showKeyboard,
-    hide: hideKeyboard
+    hide: hideKeyboard,
   };
 })();

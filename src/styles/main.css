@@ -434,24 +434,23 @@ input[type="date"] {
 }
 
 .txn-filter-group label {
-  display: none;   
+  display: none;
 }
 
-
 .txn-filter-group select {
-  font-size: 13px !important;      
-  font-weight: 600 !important;     
-  color: var(--ink) !important;    
-  padding: 10px 30px 10px 14px !important;  
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+  padding: 10px 30px 10px 14px !important;
   background-color: #ffffff !important;
-  border: 1px solid #d1d5db !important;  
+  border: 1px solid #d1d5db !important;
 }
 
 /* Slightly larger arrow */
 .txn-filter-group::after {
   font-size: 12px !important;
   right: 12px !important;
-  color: #475569 !important;        /* a stronger muted gray */
+  color: #475569 !important; /* a stronger muted gray */
 }
 
 /* add button row */
@@ -668,7 +667,6 @@ input[type="date"] {
   background: #fff;
 }
 
-
 /* =========================================
    Tablet / iPad typography (frame stays 640x960)
    ========================================= */
@@ -767,55 +765,191 @@ input[type="date"] {
     width: 240px;
     height: 240px;
   }
-  /* Budget Style*/
+  /* Budget Style */
+
+  /* Center content within the Budget panel */
+  #panel-budget .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Center the Daily / Monthly / Yearly toggles */
+  #panel-budget .home-range {
+    margin: 1rem 0 1.5rem;
+    text-align: center;
+  }
+
+  /* Headings */
+  #panel-budget h1,
+  #panel-budget h2 {
+    text-align: center;
+  }
+
+  /* Containers for budget + savings content */
+  #budget-overview,
+  #savings-overview {
+    width: 100%;
+    max-width: 540px; /* nice card width */
+    margin: 0 auto 2rem;
+  }
+
+  /* Summary line centered */
+  .budget-summary {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  /* Actions (Cancel / Save, etc.) centered under table */
+  .budget-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+  }
+
+  /* Make a Budget / Edit buttons etc. centered */
+  #panel-budget .btn,
+  #panel-budget .bdgt-btn {
+    display: inline-block;
+    margin-top: 0.5rem;
+  }
+
+  .budget-table {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto; /* safety net if screen is tiny */
+  }
+
   .budgets {
     border-collapse: collapse;
-    width: 89%;
-    max-width: 900px;
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto; /* center table */
     background-color: var(--bg);
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    table-layout: fixed; /* keep columns under control */
   }
 
+  /* Header cells */
   .budgets th {
     background-color: var(--muted);
     color: #ffffff;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    padding: 5px 5px;
+    padding: 6px 8px;
     font-weight: 600;
     text-align: left;
+    font-size: 0.8rem;
   }
 
+  /* Data cells */
   .budgets td {
-    padding: 4px 20px;
-    white-space: nowrap;
-    font-size: 20px;
+    padding: 6px 8px;
+    font-size: 0.85rem;
     border-bottom: 1px solid #e6e9ef;
-    min-width: 800px;
     color: #333;
-    min-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
   }
 
-  .budget-input {
-    width: 100px;
-    height: 50px;
+  .budgets th:nth-child(1),
+  .budgets td:nth-child(1) {
+    width: 45%;
+  }
+
+  .budgets th:nth-child(2),
+  .budgets td:nth-child(2) {
+    width: 35%;
+  }
+
+  .budgets th:nth-child(3),
+  .budgets td:nth-child(3) {
+    width: 20%;
+    text-align: center;
   }
 
   .budgets tr:last-child td {
     border-bottom: none;
   }
 
-  .input {
-    padding: 3px 3px 3px;
-  }
-  #edit-button {
-    padding: 8px 12px;
-    margin: 25px;
+  /* Inputs inside table cells (budget + savings form) */
+  .category-select,
+  .category-amount,
+  .budget-input {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    height: 2.25rem;
+    font-size: 0.85rem;
   }
 
-    /* Spending (tablet tweaks) */
+  /* Remove button in last column */
+  .remove-category-btn {
+    width: 100%;
+    padding: 4px 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  /* Optional: give Savings Goal section a bit of top spacing */
+  #savings-overview {
+    margin-top: 1rem;
+  }
+  /* Center the "no budget created" message + Make a Budget button */
+  #budget-overview > div {
+    text-align: center;
+  }
+
+  #make-budget-btn {
+    display: inline-block;
+    margin: 0.75rem auto;
+  }
+
+  /* Center the Savings Goal "No goal yet" message + Add Savings Goal button */
+  #savings-overview > p {
+    text-align: center;
+  }
+
+  #add-goal-btn {
+    position: relative;
+    left: 10px;
+    margin: 0.75rem auto;
+  }
+  /* Center edit buttons for budget + savings */
+  #edit-budget-btn {
+    display: block;
+    margin: 1rem auto;
+    text-align: center;
+  }
+
+  #edit-goal-btn {
+    display: block;
+    margin: 1rem eauto;
+    text-align: center;
+  }
+  .center-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  #edit-budget-btn,
+  #edit-goal-btn {
+    position: static !important;
+    margin: 0;
+  }
+
+  /* Spending (tablet tweaks) */
   .txn-title {
     font-size: 22px;
   }
@@ -1057,11 +1191,16 @@ input[type="date"] {
   display: grid;
   place-items: center;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
-.pfp-edit img { width: 18px; height: 18px; }
+.pfp-edit img {
+  width: 18px;
+  height: 18px;
+}
 
-.avatar-popover[hidden] { display: none !important; }
+.avatar-popover[hidden] {
+  display: none !important;
+}
 .avatar-popover {
   position: absolute;
   z-index: 10;
@@ -1075,7 +1214,7 @@ input[type="date"] {
   padding: 10px;
   display: flex;
   gap: 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .avatar-opt {
@@ -1086,39 +1225,43 @@ input[type="date"] {
   background: #fff;
   cursor: pointer;
   object-fit: contain !important;
-  transform: scale(0.5); transform-origin: 50% 50%;
-
-
+  transform: scale(0.5);
+  transform-origin: 50% 50%;
 }
-.avatar-opt:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.avatar-opt:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 .avatar-opt img {
   width: 56px;
   height: 56px;
   object-fit: contain;
 }
 
-.avatar-opt:hover { background: var(--surface); }
+.avatar-opt:hover {
+  background: var(--surface);
+}
 
 #panel-profile .budgets {
   table-layout: fixed;
   width: 100%;
-  max-width: 520px;       
+  max-width: 520px;
   margin: 0 auto;
 }
 
 #panel-profile .budgets td:first-child {
-  width: 42%;             
+  width: 42%;
   white-space: nowrap;
 }
 
 #panel-profile .budgets td:last-child {
-  width: 58%;              
+  width: 58%;
 }
 
 #panel-profile .budgets input.input,
 #panel-profile .budgets select.input {
   width: 100%;
-  height: 48px;            
+  height: 48px;
   padding: 12px 14px;
   font-size: 16px;
   border: 1px solid var(--line);
@@ -1132,9 +1275,9 @@ input[type="date"] {
   border-color: var(--line);
 }
 #panel-profile .profile-actions {
-  margin-top: 24px;   
-  padding-top: 8px;   
-  border-top: 1px solid var(--line); 
+  margin-top: 24px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
 }
 
 /* ====== ON-SCREEN KEYBOARD STYLES ====== */
@@ -1211,7 +1354,7 @@ input[type="date"] {
   background: #fee2e2;
   color: #991b1b;
   font-size: 22px;
-  flex:1.5;
+  flex: 1.5;
 }
 
 .key-backspace:active {
@@ -1267,27 +1410,27 @@ input[type="date"] {
   .keyboard {
     padding: 16px;
   }
-  
+
   .keyboard-layout {
     gap: 10px;
   }
-  
+
   .keyboard-row {
     gap: 8px;
   }
-  
+
   .key {
     font-size: 20px;
     padding: 16px 20px;
     min-height: 58px;
     border-radius: 10px;
   }
-  
+
   .keyboard-numeric .key {
     max-width: 90px;
     font-size: 24px;
   }
-  
+
   .keyboard-unified .key {
     max-width: 54px;
     font-size: 18px;
