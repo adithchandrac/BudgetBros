@@ -1141,7 +1141,7 @@ if (defaultBudgetSpan) {
   renderBudget("Monthly");
 }
 
-//Spending Graph
+// === Spending Bar Graph ===
 (function () {
   const canvas = document.getElementById("spending-graph");
   if (!canvas) return;
@@ -1149,57 +1149,58 @@ if (defaultBudgetSpan) {
 
   const data = {
     week: [100, 80, 90, 70, 50, 60, 40],
-    month: [200, 300, 250, 400],
+    month: [200, 300, 250, 400, 350], 
     year: [300, 328, 524, 400, 430, 517, 600, 650, 750, 600, 750, 500],
+  };
+
+  const budgetTargets = {
+    week: 80,
+    month: 280,
+    year: 500,
   };
 
   const buttons = document.querySelectorAll(".spending-range span");
 
-  function draw(values, label) {
+  function draw(values, rangeLabel) {
     const w = canvas.width;
     const h = canvas.height;
+
     ctx.clearRect(0, 0, w, h);
 
-    const marginLeft = 80;
+    const marginLeft = 50;
     const marginRight = 20;
     const marginTop = 20;
-    const marginBottom = 60;
+    const marginBottom = 50;
 
     const max = Math.max(...values);
-    const yZero = h - marginBottom;
+
     const xStart = marginLeft;
     const xEnd = w - marginRight;
-    const stepX = (xEnd - xStart) / (values.length - 1);
-    const trend = values[values.length - 1] - values[0];
-    const color = trend >= 0 ? "red" : "green";
+    const yZero = h - marginBottom;
 
-    // Determine time unit
-    let timeUnit = "";
-    if (label === "week") timeUnit = "days";
-    else if (label === "month") timeUnit = "weeks";
-    else if (label === "year") timeUnit = "months";
-    else timeUnit = "hours";
+    const barWidth = (xEnd - xStart) / values.length - 10;
 
-    // Axes
+    // Draw axes
     ctx.strokeStyle = "#666";
     ctx.lineWidth = 1.2;
+
     ctx.beginPath();
     ctx.moveTo(xStart, marginTop);
     ctx.lineTo(xStart, yZero);
     ctx.lineTo(xEnd, yZero);
     ctx.stroke();
 
-    // Y-axis Labels
+    // Y-axis labels
     ctx.fillStyle = "#000";
-    ctx.font = "14px Arial";
+    ctx.font = "13px Arial";
     ctx.textAlign = "right";
+
     const ySteps = 5;
     for (let i = 0; i <= ySteps; i++) {
       const val = max - (max / ySteps) * i;
       const y = marginTop + ((yZero - marginTop) * i) / ySteps;
       ctx.fillText(val.toFixed(0), xStart - 5, y + 4);
 
-      // gridline
       ctx.beginPath();
       ctx.moveTo(xStart, y);
       ctx.lineTo(xEnd, y);
@@ -1207,47 +1208,71 @@ if (defaultBudgetSpan) {
       ctx.stroke();
     }
 
-    // X-axis Labels
-    ctx.fillStyle = "#000";
-    ctx.font = "14px Arial";
+    // X-axis labels 
     ctx.textAlign = "center";
-    for (let i = 0; i < values.length; i++) {
-      const x = xStart + i * stepX;
-      ctx.fillText(i + 1, x + 2, yZero + 18);
+    ctx.fillStyle = "#000";
+
+    let labels;
+    if (rangeLabel === "week") labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].slice(0, values.length);
+    else if (rangeLabel === "month") {
+      labels = [
+        "Jan 1–7",
+        "Jan 8–14",
+        "Jan 15–21",
+        "Jan 22–28",
+        "Jan 29–31"
+      ].slice(0, values.length);
     }
+    else labels = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
-    // Axis Titles
-    ctx.font = "bold 14px Arial";
-    ctx.fillStyle = "#111";
-    ctx.fillText(`Time (${timeUnit})`, w / 2, h - 15);
+    values.forEach((_, i) => {
+      const x = xStart + i * ((xEnd - xStart) / values.length) + barWidth / 2;
+      ctx.fillText(labels[i], x, yZero + 18);
+    });
 
-    // Center Y-axis title within graph area
-    const yCenter = marginTop + (yZero - marginTop) / 2;
+    // Draw bars
+    const budget = budgetTargets[rangeLabel];
+
+    values.forEach((v, i) => {
+      const barHeight = (v / max) * (yZero - marginTop);
+      const x = xStart + i * ((xEnd - xStart) / values.length) + 5;
+      const y = yZero - barHeight;
+
+
+    const tolerance = budget * 0.10; // 10% window, change if needed
+
+    let color;
+    if (v < budget - tolerance) {
+      color = "#4CAF50";            // under budget (green)
+    } else if (v <= budget + tolerance) {
+      color = "#FFC107";            // meets budget (yellow)
+    } else {
+      color = "#E53935";            // over budget (red)
+    }
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, barWidth, barHeight);
+
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, barWidth, barHeight);
+    });
+
+    // Title (optional; remove if you prefer HTML title only)
     ctx.save();
-    ctx.translate(25, yCenter);
+    ctx.fillStyle = "#111";
+    ctx.font = "bold 14px Arial";
+    ctx.textAlign = "center";
+    ctx.translate(15, h / 2 - 20);
     ctx.rotate(-Math.PI / 2);
     ctx.fillText("Spending ($)", 0, 0);
     ctx.restore();
-
-    // Draw Line
-    ctx.beginPath();
-    ctx.moveTo(xStart, yZero - (values[0] / max) * (yZero - marginTop));
-    for (let i = 1; i < values.length; i++) {
-      const x = xStart + i * stepX;
-      const y = yZero - (values[i] / max) * (yZero - marginTop);
-      ctx.lineTo(x, y);
-    }
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 3;
-    ctx.stroke();
   }
 
+  // Click listeners
   buttons.forEach((btn) => {
     btn.addEventListener("click", () => {
       buttons.forEach((b) => b.classList.remove("is-active"));
       btn.classList.add("is-active");
-      const range = btn.dataset.range;
-      draw(data[range], range);
+      draw(data[btn.dataset.range], btn.dataset.range);
     });
   });
 
@@ -1261,142 +1286,135 @@ if (defaultBudgetSpan) {
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
   const legend = document.getElementById("category-legend");
+  const rangeButtons = document.querySelectorAll(".pie-range span");
 
-  //Example data
-  const data = {
-    Groceries: 30,
-    Dining: 20,
-    Entertainment: 10,
-    Transportation: 15,
-    Bills: 25,
+
+  const pieData = {
+    week: {
+      Groceries: 20,
+      Dining: 10,
+      Entertainment: 5,
+      Transportation: 8,
+      Bills: 15,
+    },
+    month: {
+      Groceries: 80,
+      Dining: 80,
+      Entertainment: 80,
+      Transportation: 70,
+      Bills: 110,
+    },
+    year: {
+      Groceries: 1400,
+      Dining: 1100,
+      Entertainment: 900,
+      Transportation: 850,
+      Bills: 1600,
+    },
   };
 
   const colors = ["#4caf50", "#ff9800", "#2196f3", "#e91e63", "#9c27b0"];
-  const entries = Object.entries(data);
-  const total = entries.reduce((sum, [, v]) => sum + v, 0);
 
-  const centerX = 130;
-  const centerY = 130;
-  const radius = 100;
+  let currentRange = "week";
 
-  let exploded = null;
-  let hovered = null;
+  function computeSlices(data) {
+    const entries = Object.entries(data);
+    const total = entries.reduce((sum, [, v]) => sum + v, 0);
 
-  //Store slice angle info for hit detection
-  const sliceInfo = [];
-  let startAngle = 0;
-  entries.forEach(([label, value]) => {
-    const sliceAngle = (value / total) * Math.PI * 2;
-    sliceInfo.push({ label, startAngle, endAngle: startAngle + sliceAngle });
-    startAngle += sliceAngle;
-  });
-
-  function drawPie() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let startAngle = 0;
-
-    entries.forEach(([label, value], i) => {
-      const sliceAngle = (value / total) * Math.PI * 2;
-      const midAngle = startAngle + sliceAngle / 2;
-
-      //Offset logic
-      let offset = 0;
-      if (exploded === label) offset = 15;
-      else if (hovered === label) offset = 8;
-
-      const offsetX = Math.cos(midAngle) * offset;
-      const offsetY = Math.sin(midAngle) * offset;
-
-      //Fade non-selected slices
-      ctx.globalAlpha = exploded && exploded !== label ? 0.25 : 1;
-
-      //Draw slice
-      ctx.beginPath();
-      ctx.moveTo(centerX + offsetX, centerY + offsetY);
-      ctx.arc(
-        centerX + offsetX,
-        centerY + offsetY,
-        radius,
-        startAngle,
-        startAngle + sliceAngle
-      );
-      ctx.closePath();
-      ctx.fillStyle = colors[i];
-      ctx.fill();
-
-      //Draw percentage label
-      if (!exploded || exploded === label) {
-        const labelX = centerX + offsetX + (radius / 1.5) * Math.cos(midAngle);
-        const labelY = centerY + offsetY + (radius / 1.5) * Math.sin(midAngle);
-        ctx.fillStyle = "#000";
-        ctx.font = "14px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        const percent = ((value / total) * 100).toFixed(0) + "%";
-        ctx.fillText(percent, labelX, labelY);
-      }
-
-      startAngle += sliceAngle;
+    let start = 0;
+    const slices = entries.map(([label, value]) => {
+      const angle = (value / total) * Math.PI * 2;
+      const slice = {
+        label,
+        value,
+        startAngle: start,
+        endAngle: start + angle,
+      };
+      start += angle;
+      return slice;
     });
 
-    ctx.globalAlpha = 1;
+    return { slices, entries, total };
+  }
 
-    //Show selected slice info in center
-    if (exploded) {
-      const value = data[exploded];
-      ctx.fillStyle = "#000";
-      ctx.font = "bold 16px Arial";
+
+  function drawPie() {
+    const { slices, total, entries } = computeSlices(pieData[currentRange]);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const cx = 130;
+    const cy = 130;
+    const radius = 100;
+
+    slices.forEach((slice, i) => {
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, radius, slice.startAngle, slice.endAngle);
+      ctx.closePath();
+      ctx.fillStyle = colors[i % colors.length];
+      ctx.fill();
+
+      // Percentage label
+      const mid = (slice.startAngle + slice.endAngle) / 2;
+      const lx = cx + Math.cos(mid) * (radius / 1.4);
+      const ly = cy + Math.sin(mid) * (radius / 1.4);
+      const percent = ((slice.value / total) * 100).toFixed(0) + "%";
+
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 20px Arial";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(`${exploded}: $${value}`, centerX, centerY);
-    }
+      ctx.fillText(percent, lx, ly);
+    });
+
+    updateLegend(entries);
   }
 
-  function getSliceAtMouse(e) {
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left - centerX;
-    const y = e.clientY - rect.top - centerY;
-    const dist = Math.sqrt(x * x + y * y);
-    if (dist > radius) return null;
 
-    const angle = Math.atan2(y, x);
-    const normAngle = angle >= 0 ? angle : angle + 2 * Math.PI;
-    return sliceInfo.find(
-      (s) => normAngle >= s.startAngle && normAngle < s.endAngle
-    )?.label;
+  function updateLegend(entries) {
+    legend.innerHTML = entries
+      .map(
+        ([label, _], i) =>
+          `<li>
+             <span style="background:${colors[i]}"></span>
+             ${label}
+           </li>`
+      )
+      .join("");
   }
 
-  //Click to explode (trigger pie chart to pop out and show category)
-  canvas.addEventListener("click", (e) => {
-    const slice = getSliceAtMouse(e);
-    exploded = exploded === slice ? null : slice;
-    drawPie();
-  });
 
-  //Hover lift effect
-  canvas.addEventListener("mousemove", (e) => {
-    const slice = getSliceAtMouse(e);
-    if (slice !== hovered) {
-      hovered = slice;
+  rangeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      rangeButtons.forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+
+      currentRange = btn.dataset.range;
       drawPie();
-    }
+    });
   });
+
+  drawPie();
+})();
 
   canvas.addEventListener("mouseleave", () => {
     hovered = null;
     drawPie();
   });
 
-  //Legend
-  legend.innerHTML = entries
-    .map(
-      ([label, _], i) =>
-        `<li><span style="background:${colors[i]}"></span>${label}</li>`
-    )
-    .join("");
 
-  drawPie();
-})();
+  rangeButtons.forEach((btn) =>
+    btn.addEventListener("click", () => {
+      rangeButtons.forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+
+      currentRange = btn.dataset.range;
+      exploded = null;
+      hovered = null;
+      drawPie();
+    })
+  );
 
 //Profile avatar selector
 (() => {
